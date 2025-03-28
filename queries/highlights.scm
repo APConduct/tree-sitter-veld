@@ -19,7 +19,7 @@
 
 ; Types
 (type
-  name: (identifier) @type)
+  (identifier) @type)
 
 (struct_declaration
   name: (identifier) @type)
@@ -28,13 +28,13 @@
   name: (identifier) @type)
 
 ; Strings
-(string_literal) @string
+(string) @string
 
 ; Numbers
-(number_literal) @number
+(number) @number
 
 ; Operators
-["=" "+" "-" "*" "/" "==" "!=" "<" ">" "<=" ">=" "." "," ":" "->" "=>"] @operator
+["=" "+" "-" "*" "/" "==" "!=" "<" ">" "<=" ">=" "," ":" "->"] @operator
 
 ; Punctuation
-["(" ")" "[" "]" "{" "}" ";" "~"] @punctuation
+["(" ")" ";" "~"] @punctuation

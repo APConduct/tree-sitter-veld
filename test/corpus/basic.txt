@@ -1,0 +1,53 @@
+==================
+Basic function
+==================
+
+fn add(a: i32, b: i32) -> i32 =
+    a + b
+end
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameter_list
+      (parameters
+        (parameter
+          name: (identifier)
+          (type (identifier)))
+        (parameter
+          name: (identifier)
+          (type (identifier)))))
+    (type (identifier))
+    (block
+      (expression
+            (binary_expression
+              left: (expression
+                (identifier))
+              right: (expression
+                (identifier)))))))
+
+==================
+Simple struct
+==================
+
+struct Point
+    x: f64,
+    y: f64,
+end
+
+---
+
+(source_file
+  (struct_declaration
+    name: (identifier)
+    (struct_body
+      (struct_field
+        name: (identifier)
+      type: (type
+              (identifier)))
+          (struct_field
+            name: (identifier)
+            type: (type
+              (identifier))))))

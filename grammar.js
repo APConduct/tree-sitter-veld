@@ -38,23 +38,21 @@ module.exports = grammar({
           field("name", $.identifier),
           optional($.generic_parameters),
           $.struct_body,
-          optional($.impl_block),
           "end",
         ),
         // Single-line struct
         prec(
-          1,
+          2,
           seq(
             "struct",
             field("name", $.identifier),
             "(",
-            optional($.struct_fields),
+            optional($.inline_struct_fields),
             ")",
             ";",
           ),
         ),
       ),
-
     // Implementation declaration
     impl_declaration: ($) =>
       prec(
@@ -158,7 +156,25 @@ module.exports = grammar({
       ),
 
     struct_field: ($) =>
-      prec.right(1, seq(field("name", $.identifier), ":", $.type)),
+      prec.right(
+        1,
+        seq(
+          field("name", $.identifier),
+          ":",
+          field("type", $.type),
+          optional(","),
+        ),
+      ),
+
+    inline_struct_fields: ($) =>
+      seq(
+        $.inline_struct_field,
+        repeat(seq(",", $.inline_struct_field)),
+        optional(","),
+      ),
+
+    inline_struct_field: ($) =>
+      seq(field("name", $.identifier), ":", field("type", $.type)),
 
     impl_body: ($) => repeat1($.function_declaration),
 
@@ -210,6 +226,13 @@ module.exports = grammar({
         $.binary_expression,
         $.function_call,
         $.macro_call,
+        $.return_expression,
+      ),
+
+    return_expression: ($) =>
+      prec.right(
+        2, // Higher precedence than binary_expression
+        seq("return", optional($.expression)),
       ),
 
     number: ($) => /\d+(\.\d+)?/,
@@ -217,10 +240,14 @@ module.exports = grammar({
 
     binary_expression: ($) =>
       prec.left(
+        1, // Lower precedence than return_expression
         seq(
-          $.expression,
-          choice("+", "-", "*", "/", "==", "!=", "<", ">", "<=", ">="),
-          $.expression,
+          field("left", $.expression),
+          field(
+            "operator",
+            choice("+", "-", "*", "/", "==", "!=", "<", ">", "<=", ">="),
+          ),
+          field("right", $.expression),
         ),
       ),
 
