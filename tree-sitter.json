@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "veld",
+      "camelcase": "veld",
+      "title": "Veld",
+      "scope": "source.veld",
+      "file-types": [
+        "veld"
+      ],
+      "injection-regex": "^veld$",
+      "class-name": "TreeSitterVeld"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "Apache2.0",
+    "description": "A tree-sitter parser for the Veld programming language",
+    "authors": [
+      {
+        "name": "Perry",
+        "email": "aidanpj18@gmail.com",
+        "url": "https://github.com/APConduct"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/APConduct/veld"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}
