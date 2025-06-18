@@ -41,10 +41,15 @@
 (member_expression
   (identifier) @property)
 
-; Statements
+; Statement nodes that represent keywords
 (break_statement) @keyword
 (continue_statement) @keyword
 (return_statement) @keyword
+; Macro-related keywords
+; To change the behavior of these keywords, change '@keyword.macro' to '@function.macro' or similar
+(macro_declaration) @keyword.macro
+(macro_expression) @keyword.macro
+(macro_invocation) @keyword.macro
 
 ; Safe keywords (excluding the problematic ones)
 "fn" @keyword
@@ -72,9 +77,10 @@
 "match" @keyword
 "where" @keyword
 "return" @keyword
-;"break" @keyword
-;"continue" @keyword
-;"macro" @keyword
+
+; Pattern matching for problematic keywords in identifiers
+((identifier) @keyword
+ (#match? @keyword "^(break|continue|macro)$"))
 
 ; Operators
 "=" @operator
