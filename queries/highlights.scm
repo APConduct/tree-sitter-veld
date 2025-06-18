@@ -1,76 +1,3 @@
-; Keywords
-[
-  "fn"
-  "proc"
-  "let"
-  "var"
-  "const"
-  "mut"
-  "struct"
-  "kind"
-  "impl"
-  "end"
-  "if"
-  "else"
-  "then"
-  "while"
-  "for"
-  "in"
-  "do"
-  "return"
-  "mod"
-  "import"
-  "pub"
-  "as"
-  "enum"
-  "match"
-  "where"
-  "macro"
-  "break"
-  "continue"
-] @keyword
-
-; Operators
-[
-  "="
-  "+"
-  "-"
-  "*"
-  "/"
-  "=="
-  "!="
-  "<"
-  ">"
-  "<="
-  ">="
-  "->"
-  "=>"
-  "^"
-  "%"
-  "+="
-  "-="
-  "*="
-  "/="
-  "|>"
-  "<-"
-  "@"
-  "~"
-] @operator
-
-; Punctuation
-[
-  "("
-  ")"
-  "{"
-  "}"
-  "["
-  "]"
-  ","
-  "."
-  ":"
-  ";"
-] @punctuation.delimiter
-
 ; Comments
 (comment) @comment
 (multiline_comment) @comment
@@ -87,70 +14,101 @@
 (function_type) @type
 (array_type) @type
 (tuple_type) @type
-(generic_type
-  base: (identifier) @type)
 
-; Function names
+; Identifiers in specific contexts
 (function_declaration
-  name: (identifier) @function)
+  (identifier) @function)
 (proc_declaration
-  name: (identifier) @function)
-
-; Method names
-(struct_method
-  name: (identifier) @function.method)
-(kind_method
-  name: (identifier) @function.method)
-(impl_method
-  name: (identifier) @function.method)
-(method_call
-  method: (identifier) @function.method)
-
-; Struct, kind, and enum names
+  (identifier) @function)
 (struct_declaration
-  name: (identifier) @type)
+  (identifier) @type)
 (kind_declaration
-  name: (identifier) @type)
+  (identifier) @type)
 (enum_declaration
-  name: (identifier) @type)
-
-; Attributes
-(attribute
-  name: (identifier) @attribute)
-
-; Variables
+  (identifier) @type)
 (variable_declaration
-  name: (identifier) @variable)
+  (identifier) @variable)
 (parameter
-  name: (identifier) @parameter)
-
-; Module and import
+  (identifier) @parameter)
 (module_declaration
-  name: (identifier) @namespace)
-(import_path
   (identifier) @namespace)
-(import_item
-  name: (identifier) @variable.import)
-
-; Enum
-(enum_variant
-  name: (identifier) @type)
-(enum_variant_expression
-  enum: (identifier) @type
-  variant: (identifier) @constructor)
 
 ; Fields
 (struct_field
-  name: (identifier) @property)
+  (identifier) @property)
 (struct_field_initializer
-  name: (identifier) @property)
+  (identifier) @property)
 (member_expression
-  property: (identifier) @property)
+  (identifier) @property)
 
-; Macro
-(macro_declaration
-  name: (identifier) @function.macro)
-(macro_expression
-  name: (identifier) @function.macro)
-(macro_invocation
-  name: (identifier) @function.macro)
+; Statements
+(break_statement) @keyword
+(continue_statement) @keyword
+(return_statement) @keyword
+
+; Safe keywords (excluding the problematic ones)
+"fn" @keyword
+"proc" @keyword
+"let" @keyword
+"var" @keyword
+"const" @keyword
+"mut" @keyword
+"struct" @keyword
+"kind" @keyword
+"impl" @keyword
+"end" @keyword
+"if" @keyword
+"else" @keyword
+"then" @keyword
+"while" @keyword
+"for" @keyword
+"in" @keyword
+"do" @keyword
+"mod" @keyword
+"import" @keyword
+"pub" @keyword
+"as" @keyword
+"enum" @keyword
+"match" @keyword
+"where" @keyword
+"return" @keyword
+;"break" @keyword
+;"continue" @keyword
+;"macro" @keyword
+
+; Operators
+"=" @operator
+"+" @operator
+"-" @operator
+"*" @operator
+"/" @operator
+"==" @operator
+"!=" @operator
+"<" @operator
+">" @operator
+"<=" @operator
+">=" @operator
+"->" @operator
+"=>" @operator
+"^" @operator
+"%" @operator
+"+=" @operator
+"-=" @operator
+"*=" @operator
+"/=" @operator
+"|>" @operator
+"<-" @operator
+"@" @operator
+"~" @operator
+
+; Punctuation
+"(" @punctuation.delimiter
+")" @punctuation.delimiter
+"{" @punctuation.delimiter
+"}" @punctuation.delimiter
+"[" @punctuation.delimiter
+"]" @punctuation.delimiter
+"," @punctuation.delimiter
+"." @punctuation.delimiter
+":" @punctuation.delimiter
+";" @punctuation.delimiter

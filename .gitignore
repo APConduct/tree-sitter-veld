@@ -77,3 +77,4 @@ src/parser.c
 src/tree_sitter
 src/*.json
 .DS_Store
+!src/node-types.json
