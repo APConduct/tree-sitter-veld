@@ -6,11 +6,11 @@
       "camelcase": "Veld",
       "title": "Veld",
       "scope": "source.veld",
-      "file-types": [
-        "veld"
-      ],
+      "file-types": ["veld"],
       "injection-regex": "^veld$",
-      "class-name": "TreeSitterVeld"
+      "class-name": "TreeSitterVeld",
+      "highlights": ["queries/highlights.scm"],
+      "locals": "queries/locals.scm"
     }
   ],
   "metadata": {
