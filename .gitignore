@@ -68,3 +68,12 @@ src/*.cc
 .idea/
 *.swp
 *.swo
+
+/target
+**/*.rs.bk
+Cargo.lock
+node_modules
+src/parser.c
+src/tree_sitter
+src/*.json
+.DS_Store

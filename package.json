@@ -1,0 +1,38 @@
+{
+  "name": "tree-sitter-veld",
+  "version": "0.1.0",
+  "description": "Veld grammar for tree-sitter",
+  "main": "bindings/node",
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp build",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse",
+    "build:rust": "cd bindings/rust && cargo build --release"
+  },
+  "keywords": [
+    "parsing",
+    "incremental",
+    "veld",
+    "tree-sitter"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.17.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.8"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.veld",
+      "file-types": [
+        "veld"
+      ],
+      "highlights": [
+        "queries/highlights.scm"
+      ],
+      "injection-regex": "veld"
+    }
+  ]
+}

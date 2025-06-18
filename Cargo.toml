@@ -1,0 +1,27 @@
+[package]
+name = "tree-sitter-veld"
+version = "0.1.0"
+edition = "2021"
+description = "Veld grammar for the tree-sitter parsing library"
+license = "MIT"
+build = "bindings/rust/build.rs"
+include = [
+  "bindings/rust/*",
+  "grammar.js",
+  "src/*.c",
+  "src/*.h",
+  "queries/*",
+  "Cargo.toml",
+]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter = "0.20.10"
+
+[build-dependencies]
+cc = "1.0"
+
+[dev-dependencies]
+tree-sitter-cli = { version = "0.20.8", optional = true }
