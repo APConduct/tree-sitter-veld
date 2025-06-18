@@ -2,9 +2,7 @@
 target/
 
 # Node artifacts
-build/
 prebuilds/
-node_modules/
 
 # Swift artifacts
 .build/
@@ -19,14 +17,8 @@ dist/
 *.whl
 
 # C artifacts
-*.a
-*.so
 *.so.*
-*.dylib
-*.dll
 *.pc
-*.exp
-*.lib
 
 # Zig artifacts
 .zig-cache/
@@ -45,3 +37,34 @@ zig-out/
 *.tar.gz
 *.tgz
 *.zip
+
+# Build artifacts
+build/
+node_modules/
+*.log
+*.o
+*.so
+*.dylib
+*.a
+*.obj
+*.lib
+*.dll
+*.exp
+*.out
+*.dSYM/
+.DS_Store
+
+# Tree-sitter specific
+src/*.c
+src/*.h
+src/*.cc
+!src/parser.c
+!src/scanner.c
+!src/scanner.cc
+!src/grammar.json
+
+# Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
