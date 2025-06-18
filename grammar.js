@@ -18,6 +18,30 @@ module.exports = grammar({
     [$.attribute_argument, $.expression],
     // Struct field vs struct field initializer
     [$.struct_field, $.struct_field_initializer],
+
+    [$.expression, $.function_call, $.struct_expression],
+    [$.return_statement],
+
+    [$.block],
+    [$.source_file, $.block],
+    [$.module_declaration],
+    [$.import_path],
+    [$.expression_statement, $.block_expression],
+    [$.member_expression, $.enum_variant_expression],
+    [$.lambda, $.type_cast],
+    [$.macro_invocation, $.macro_expression],
+    [$.expression, $.tuple_literal],
+    [$.parenthesized_expression, $.index_expression],
+    [$.expression, $.index_expression],
+    [$.statement, $.module_declaration],
+    [$.struct_declaration],
+    [$.struct_fields],
+    [$.basic_type, $.generic_type],
+    [$.argument, $.struct_field_initializer],
+    [$.kind_method],
+    [$.statement, $.if_statement],
+    [$.if_statement, $.expression_statement],
+    [$.generic_params],
   ],
 
   rules: {
@@ -98,14 +122,14 @@ module.exports = grammar({
 
         // Other statements
         $.assignment,
-        $.if_statement,
+        prec(3, $.if_statement),
         $.while_statement,
         $.for_statement,
         $.return_statement,
         $.match_statement,
         $.macro_invocation,
         $.expression_statement,
-        $.block,
+        prec(1, $.block),
         $.break_statement,
         $.continue_statement,
       ),
@@ -116,11 +140,14 @@ module.exports = grammar({
 
     // Module and import
     module_declaration: ($) =>
-      seq(
-        optional("pub"),
-        "mod",
-        field("name", $.identifier),
-        optional(field("body", $.block)),
+      prec.right(
+        2,
+        seq(
+          optional("pub"),
+          "mod",
+          field("name", $.identifier),
+          optional(field("body", $.block)),
+        ),
       ),
 
     import_declaration: ($) =>
@@ -136,7 +163,8 @@ module.exports = grammar({
         ),
       ),
 
-    import_path: ($) => seq($.identifier, repeat(seq(".", $.identifier))),
+    import_path: ($) =>
+      prec.left(seq($.identifier, repeat(seq(".", $.identifier)))),
 
     import_items: ($) =>
       seq(".", choice("*", seq("{", commaSep($.import_item), "}"))),
@@ -179,24 +207,30 @@ module.exports = grammar({
 
     // Struct and kind declarations
     struct_declaration: ($) =>
-      seq(
-        optional("pub"),
-        "struct",
-        field("name", $.identifier),
-        optional(field("generic_params", $.generic_params)),
-        choice(
-          seq(
-            field("fields", $.struct_fields),
-            optional(field("methods", repeat($.struct_method))),
-            optional("end"),
+      prec.right(
+        seq(
+          optional("pub"),
+          "struct",
+          field("name", $.identifier),
+          optional(field("generic_params", $.generic_params)),
+          choice(
+            // Tuple-style struct (simple case)
+            seq("(", commaSep($.struct_field), ")"),
+
+            // Block-style struct with fields and methods
+            seq(
+              field("fields", $.struct_fields),
+              optional(field("methods", repeat($.struct_method))),
+              "end", // Always require 'end' for block-style structs
+            ),
           ),
-          seq("(", commaSep($.struct_field), ")"),
         ),
       ),
 
     struct_fields: ($) =>
       choice(
-        seq(commaSep($.struct_field), optional(",")),
+        // Ensure at least one field (commaSep1 instead of commaSep)
+        seq(commaSep1($.struct_field), optional(",")),
         seq(field("fields", commaSep1($.struct_field))),
       ),
 
@@ -243,16 +277,18 @@ module.exports = grammar({
       ),
 
     kind_method: ($) =>
-      seq(
-        optional("pub"),
-        "fn",
-        field("name", $.identifier),
-        field("parameters", $.method_parameters),
-        optional(seq("->", field("return_type", $.type))),
-        optional(
-          choice(
-            field("body", $.block),
-            seq("=>", field("expression", $.expression)),
+      prec.right(
+        seq(
+          optional("pub"),
+          "fn",
+          field("name", $.identifier),
+          field("parameters", $.method_parameters),
+          optional(seq("->", field("return_type", $.type))),
+          optional(
+            choice(
+              field("body", $.block),
+              seq("=>", field("expression", $.expression)),
+            ),
           ),
         ),
       ),
@@ -329,18 +365,24 @@ module.exports = grammar({
 
     // Control flow statements
     if_statement: ($) =>
-      seq(
-        "if",
-        field("condition", $.expression),
-        "then",
-        field("consequence", choice($.block, $.expression)),
-        optional(
-          seq(
-            "else",
-            field("alternative", choice($.block, $.if_statement, $.expression)),
+      prec.right(
+        3,
+        seq(
+          "if",
+          field("condition", $.expression),
+          "then",
+          field("consequence", choice($.expression, $.block)),
+          optional(
+            seq(
+              "else",
+              field(
+                "alternative",
+                choice($.expression, $.block, $.if_statement),
+              ),
+            ),
           ),
+          optional("end"),
         ),
-        optional("end"),
       ),
 
     while_statement: ($) =>
@@ -365,7 +407,7 @@ module.exports = grammar({
       ),
 
     return_statement: ($) =>
-      seq("return", optional(field("value", $.expression))),
+      prec.right(seq("return", optional(field("value", $.expression)))),
 
     match_statement: ($) =>
       seq("match", field("value", $.expression), repeat($.match_arm), "end"),
@@ -417,44 +459,60 @@ module.exports = grammar({
       ),
 
     macro_invocation: ($) =>
-      seq(
-        field("name", $.identifier),
-        "~",
-        field("arguments", $.macro_arguments),
+      prec(
+        1,
+        seq(
+          field("name", $.identifier),
+          "~",
+          field("arguments", $.macro_arguments),
+        ),
       ),
 
     macro_arguments: ($) => seq("(", optional(commaSep($.expression)), ")"),
 
     // Block and expressions
-    block: ($) => seq(repeat1($.statement), optional("end")),
+    block: ($) => seq(repeat1($.statement), "end"),
 
     expression_statement: ($) =>
-      seq(field("expression", $.expression), optional(";")),
+      prec(1, seq(field("expression", $.expression), optional(";"))),
 
     expression: ($) =>
       choice(
-        $.literal,
-        $.identifier,
-        $.function_call,
-        $.method_call,
-        $.member_expression,
-        $.index_expression,
+        // Simple expressions (higher precedence)
+        prec(10, $.literal),
+        prec(10, $.identifier),
+
+        // Call expressions (high precedence)
+        prec(9, $.function_call),
+        prec(9, $.method_call),
+        prec(9, $.member_expression),
+        prec(9, $.index_expression),
+
+        // Other expressions
         $.binary_expression,
         $.unary_expression,
         $.lambda,
         $.block_expression,
         $.if_expression,
-        $.struct_expression,
-        $.array_literal,
-        $.tuple_literal,
-        $.enum_variant_expression,
+
+        // Creation expressions (lower precedence than call expressions)
+        prec(8, $.struct_expression),
+        prec(8, $.array_literal),
+        prec(8, $.tuple_literal),
+        prec(8, $.enum_variant_expression),
+
+        // Macro expressions
         $.macro_expression,
         $.type_cast,
-        seq("(", $.expression, ")"),
+
+        // Parenthesized expressions
+        $.parenthesized_expression,
       ),
 
+    parenthesized_expression: ($) => prec(10, seq("(", $.expression, ")")),
+
     block_expression: ($) =>
-      seq("do", repeat($.statement), optional($.expression), "end"),
+      prec(2, seq("do", repeat($.statement), optional($.expression), "end")),
 
     if_expression: ($) =>
       seq(
@@ -468,30 +526,36 @@ module.exports = grammar({
       ),
 
     lambda: ($) =>
-      choice(
-        seq(
-          field(
-            "params",
-            choice($.identifier, seq("(", commaSep($.parameter), ")")),
+      prec.right(
+        5,
+        choice(
+          seq(
+            field(
+              "params",
+              choice($.identifier, seq("(", commaSep($.parameter), ")")),
+            ),
+            "=>",
+            field("body", $.expression),
           ),
-          "=>",
-          field("body", $.expression),
-        ),
-        seq(
-          field(
-            "params",
-            choice($.identifier, seq("(", commaSep($.parameter), ")")),
+          seq(
+            field(
+              "params",
+              choice($.identifier, seq("(", commaSep($.parameter), ")")),
+            ),
+            "=>",
+            "do",
+            repeat($.statement),
+            optional($.expression),
+            "end",
           ),
-          "=>",
-          "do",
-          repeat($.statement),
-          optional($.expression),
-          "end",
         ),
       ),
 
     function_call: ($) =>
-      seq(field("function", $.identifier), field("arguments", $.arguments)),
+      prec.left(
+        9,
+        seq(field("function", $.identifier), field("arguments", $.arguments)),
+      ),
 
     method_call: ($) =>
       seq(
@@ -503,7 +567,7 @@ module.exports = grammar({
             $.method_call,
             $.member_expression,
             $.index_expression,
-            seq("(", $.expression, ")"),
+            $.parenthesized_expression, // Use parenthesized_expression directly
           ),
         ),
         ".",
@@ -516,41 +580,50 @@ module.exports = grammar({
     argument: ($) =>
       choice(
         $.expression,
-        seq(field("name", $.identifier), ":", field("value", $.expression)),
+        prec(
+          2,
+          seq(field("name", $.identifier), ":", field("value", $.expression)),
+        ),
       ),
 
     member_expression: ($) =>
-      seq(
-        field(
-          "object",
-          choice(
-            $.identifier,
-            $.function_call,
-            $.method_call,
-            $.member_expression,
-            $.index_expression,
-            seq("(", $.expression, ")"),
+      prec(
+        1,
+        seq(
+          field(
+            "object",
+            choice(
+              $.identifier,
+              $.function_call,
+              $.method_call,
+              $.member_expression,
+              $.index_expression,
+              seq("(", $.expression, ")"),
+            ),
           ),
+          ".",
+          field("property", $.identifier),
         ),
-        ".",
-        field("property", $.identifier),
       ),
 
     index_expression: ($) =>
-      seq(
-        field(
-          "object",
-          choice(
-            $.identifier,
-            $.function_call,
-            $.method_call,
-            $.member_expression,
-            seq("(", $.expression, ")"),
+      prec.left(
+        11,
+        seq(
+          field(
+            "object",
+            choice(
+              $.identifier,
+              $.function_call,
+              $.method_call,
+              $.member_expression,
+              $.parenthesized_expression,
+            ),
           ),
+          "[",
+          field("index", $.expression),
+          "]",
         ),
-        "[",
-        field("index", $.expression),
-        "]",
       ),
 
     binary_expression: ($) => {
@@ -629,37 +702,59 @@ module.exports = grammar({
       prec(8, seq(choice("-", "!", "not"), field("operand", $.expression))),
 
     struct_expression: ($) =>
-      seq(
-        field("name", $.identifier),
-        "(",
-        commaSep($.struct_field_initializer),
-        ")",
+      prec.left(
+        8,
+        seq(
+          field("name", $.identifier),
+          "(",
+          commaSep($.struct_field_initializer),
+          ")",
+        ),
       ),
 
     struct_field_initializer: ($) =>
-      seq(field("name", $.identifier), ":", field("value", $.expression)),
+      prec(
+        1,
+        seq(field("name", $.identifier), ":", field("value", $.expression)),
+      ),
 
     array_literal: ($) => seq("[", optional(commaSep($.expression)), "]"),
 
-    tuple_literal: ($) => seq("(", commaSep1($.expression), optional(","), ")"),
+    tuple_literal: ($) =>
+      choice(
+        // Single-element tuple must have a comma
+        seq("(", $.expression, ",", ")"),
+
+        // Multiple elements
+        seq("(", commaSep2($.expression), optional(","), ")"),
+      ),
 
     enum_variant_expression: ($) =>
-      seq(
-        field("enum", $.identifier),
-        ".",
-        field("variant", $.identifier),
-        optional(seq("(", optional(commaSep($.expression)), ")")),
+      prec(
+        2,
+        seq(
+          field("enum", $.identifier),
+          ".",
+          field("variant", $.identifier),
+          optional(seq("(", optional(commaSep($.expression)), ")")),
+        ),
       ),
 
     macro_expression: ($) =>
-      seq(
-        field("name", $.identifier),
-        "~",
-        field("arguments", $.macro_arguments),
+      prec(
+        5,
+        seq(
+          field("name", $.identifier),
+          "~",
+          field("arguments", $.macro_arguments),
+        ),
       ),
 
     type_cast: ($) =>
-      seq(field("expression", $.expression), "as", field("type", $.type)),
+      prec(
+        11,
+        seq(field("expression", $.expression), "as", field("type", $.type)),
+      ),
 
     // Types
     type: ($) =>
@@ -672,19 +767,22 @@ module.exports = grammar({
         "()", // Unit type
       ),
 
-    basic_type: ($) => $.identifier,
+    basic_type: ($) => prec(1, $.identifier),
 
     generic_type: ($) =>
-      seq(
-        field("base", $.identifier),
-        "<",
-        commaSep1(
-          choice(
-            $.type,
-            seq(field("name", $.identifier), "=", field("type", $.type)),
+      prec(
+        2,
+        seq(
+          field("base", $.identifier),
+          "<",
+          commaSep1(
+            choice(
+              $.type,
+              seq(field("name", $.identifier), "=", field("type", $.type)),
+            ),
           ),
+          ">",
         ),
-        ">",
       ),
 
     function_type: ($) =>
@@ -695,15 +793,17 @@ module.exports = grammar({
     tuple_type: ($) => seq("(", commaSep1($.type), ")"),
 
     generic_params: ($) =>
-      seq(
-        "<",
-        commaSep1(
-          choice(
-            $.identifier,
-            seq(field("name", $.identifier), ":", commaSep1($.type)),
+      prec.left(
+        seq(
+          "<",
+          commaSep1(
+            choice(
+              $.identifier,
+              seq(field("name", $.identifier), ":", commaSep1($.type)),
+            ),
           ),
+          ">",
         ),
-        ">",
       ),
   },
 });
@@ -714,4 +814,8 @@ function commaSep(rule) {
 
 function commaSep1(rule) {
   return seq(rule, repeat(seq(",", rule)));
+}
+
+function commaSep2(rule) {
+  return seq(rule, ",", commaSep(rule));
 }
