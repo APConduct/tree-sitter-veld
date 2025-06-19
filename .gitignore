@@ -54,6 +54,9 @@ node_modules/
 *.dSYM/
 .DS_Store
 
+src/*.json
+
+
 # Tree-sitter specific
 src/*.c
 src/*.h
@@ -62,6 +65,7 @@ src/*.cc
 !src/scanner.c
 !src/scanner.cc
 !src/grammar.json
+!src/node-types.json
 
 # Editor specific
 .vscode/
@@ -73,7 +77,4 @@ src/*.cc
 **/*.rs.bk
 Cargo.lock
 node_modules
-src/parser.c
-src/tree_sitter
-src/*.json
 .DS_Store
