@@ -10,7 +10,7 @@
       "injection-regex": "^veld$",
       "class-name": "TreeSitterVeld",
       "highlights": ["queries/highlights.scm"],
-      "locals": "queries/locals.scm"
+      "locals": ["queries/locals.scm"]
     }
   ],
   "metadata": {

@@ -48,8 +48,14 @@ module.exports = grammar({
     source_file: ($) => repeat($.statement),
 
     // Comments
-    comment: ($) => token(seq("#", /.*/)),
-    multiline_comment: ($) => token(seq("#|", /[^|]*/, "|#")),
+    comment: ($) => token(choice(seq("#", /.*/), seq("#|", /.*/))),
+    multiline_comment: ($) =>
+      token(
+        choice(
+          seq("#[[", /(.|\n|\r)*?/, "]]"),
+          seq("#|[[", /(.|\n|\r)*?/, "]]"),
+        ),
+      ),
 
     // Identifiers and literals
     identifier: ($) => /[a-zA-Z_][a-zA-Z0-9_]*/,

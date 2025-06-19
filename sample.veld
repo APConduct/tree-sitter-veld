@@ -2,3 +2,4 @@ fn main() -> i32
     println~("Hello, Veld!")
     0
 end
+# this is a comment
