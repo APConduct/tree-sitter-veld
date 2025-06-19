@@ -1,5 +1,4 @@
 {
-  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "veld",
   "rules": {
     "source_file": {
@@ -2676,7 +2675,7 @@
         },
         {
           "type": "PATTERN",
-          "value": "[^\\s\\$\\,\\.\\:]+"
+          "value": "[^\\s$,.:\"'()]+"
         }
       ]
     },
@@ -4752,6 +4751,6 @@
   "precedences": [],
   "externals": [],
   "inline": [],
-  "supertypes": [],
-  "reserved": {}
+  "supertypes": []
 }
+

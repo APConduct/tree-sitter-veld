@@ -461,7 +461,7 @@ module.exports = grammar({
         ".",
         ":",
         field("variable", seq("$", $.identifier, ":", $.identifier)),
-        /[^\s\$\,\.\:]+/,
+        /[^\s$,.:"'()]+/,
       ),
 
     macro_invocation: ($) =>
