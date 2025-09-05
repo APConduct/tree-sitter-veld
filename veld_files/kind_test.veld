@@ -1,4 +1,4 @@
 kind Test
-    pub fn fun_one()
-    pub fn fun_two()
+    pub fn fun_one() -> f64
+    pub fn fun_two() -> f64
 end

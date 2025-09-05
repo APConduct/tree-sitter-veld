@@ -299,7 +299,14 @@ module.exports = grammar({
           "fn",
           field("name", $.identifier),
           field("parameters", $.method_parameters),
-          optional(seq("->", field("return_type", $.type))),
+          optional(
+            seq(
+              optional(repeat(" ")),
+              "->",
+              optional(repeat(" ")),
+              field("return_type", $.type),
+            ),
+          ),
           choice(
             optional(
               choice(
