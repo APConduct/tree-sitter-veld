@@ -1805,45 +1805,147 @@
           ]
         },
         {
-          "type": "STRING",
-          "value": "("
-        },
-        {
           "type": "CHOICE",
           "members": [
             {
               "type": "SEQ",
               "members": [
                 {
-                  "type": "SYMBOL",
-                  "name": "enum_variant"
+                  "type": "STRING",
+                  "value": "("
                 },
                 {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": ","
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "enum_variant"
-                      }
-                    ]
-                  }
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "enum_variant"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "enum_variant"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
                 }
               ]
             },
             {
-              "type": "BLANK"
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "enum_variant"
+                            },
+                            {
+                              "type": "REPEAT",
+                              "content": {
+                                "type": "SEQ",
+                                "members": [
+                                  {
+                                    "type": "STRING",
+                                    "value": ","
+                                  },
+                                  {
+                                    "type": "SYMBOL",
+                                    "name": "enum_variant"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "SYMBOL",
+                              "name": "enum_variant"
+                            },
+                            {
+                              "type": "REPEAT",
+                              "content": {
+                                "type": "SEQ",
+                                "members": [
+                                  {
+                                    "type": "STRING",
+                                    "value": " "
+                                  },
+                                  {
+                                    "type": "SYMBOL",
+                                    "name": "enum_variant"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ","
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": "end"
+                }
+              ]
             }
           ]
-        },
-        {
-          "type": "STRING",
-          "value": ")"
         }
       ]
     },

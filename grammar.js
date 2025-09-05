@@ -329,9 +329,14 @@ module.exports = grammar({
         "enum",
         field("name", $.identifier),
         optional(field("generic_params", $.generic_params)),
-        "(",
-        commaSep($.enum_variant),
-        ")",
+        choice(
+          seq("(", commaSep($.enum_variant), ")"),
+          seq(
+            choice(commaSep($.enum_variant), spaceSep($.enum_variant)),
+            optional(","),
+            "end",
+          ),
+        ),
       ),
 
     enum_variant: ($) =>
