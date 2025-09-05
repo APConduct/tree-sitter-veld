@@ -221,12 +221,13 @@ module.exports = grammar({
           optional(field("generic_params", $.generic_params)),
           choice(
             // Tuple-style struct (simple case)
-            seq("(", commaSep($.struct_field), ")"),
+            seq("(", commaSep($.struct_field), optional(","), ")"),
 
             // Block-style struct with fields and methods
             seq(
-              field("fields", $.struct_fields),
+              optional(field("fields", $.struct_fields)),
               optional(field("methods", repeat($.struct_method))),
+              optional(","),
               "end", // Always require 'end' for block-style structs
             ),
           ),
@@ -236,7 +237,7 @@ module.exports = grammar({
     struct_fields: ($) =>
       choice(
         // Ensure at least one field (commaSep1 instead of commaSep)
-        seq(commaSep1($.struct_field), optional(",")),
+        seq(spaceSep1($.struct_field), optional(",")),
         seq(field("fields", commaSep1($.struct_field))),
       ),
 
@@ -264,9 +265,17 @@ module.exports = grammar({
     method_parameters: ($) =>
       seq(
         "(",
-        seq(
-          optional(seq(choice("self", "mut self"), optional(","))),
-          optional(commaSep($.parameter)),
+        optional(
+          seq(
+            optional(
+              seq(
+                choice("self", "mut self"),
+                optional(seq(":", field("param_type", $.type))),
+                optional(","),
+              ),
+            ),
+            optional(commaSep($.parameter)),
+          ),
         ),
         ")",
       ),
@@ -277,10 +286,11 @@ module.exports = grammar({
         "kind",
         field("name", $.identifier),
         optional(field("generic_params", $.generic_params)),
-        optional(seq(":", commaSep1($.type))),
-        repeat($.kind_method),
+        field("methods", $.kind_methods),
         "end",
       ),
+
+    kind_methods: ($) => seq($.kind_method, optional(repeat($.kind_method))),
 
     kind_method: ($) =>
       prec.right(
@@ -290,10 +300,16 @@ module.exports = grammar({
           field("name", $.identifier),
           field("parameters", $.method_parameters),
           optional(seq("->", field("return_type", $.type))),
-          optional(
+          choice(
+            optional(
+              choice(
+                field("body", $.block),
+                seq("=>", field("expression", $.expression)),
+              ),
+            ),
             choice(
-              field("body", $.block),
-              seq("=>", field("expression", $.expression)),
+              repeat(" "),
+              seq(optional(repeat(" ")), ",", optional(repeat(" "))),
             ),
           ),
         ),
@@ -820,6 +836,14 @@ function commaSep(rule) {
 
 function commaSep1(rule) {
   return seq(rule, repeat(seq(",", rule)));
+}
+
+function spaceSep(rule) {
+  return optional(spaceSep1(rule));
+}
+
+function spaceSep1(rule) {
+  return seq(rule, repeat(seq(" ", rule)));
 }
 
 function commaSep2(rule) {

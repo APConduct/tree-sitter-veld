@@ -1,0 +1,4 @@
+kind Test
+    pub fn fun_one()
+    pub fn fun_two()
+end

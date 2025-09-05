@@ -1035,6 +1035,16 @@
           }
         ]
       },
+      "methods": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "kind_methods",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -1045,20 +1055,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "kind_method",
-          "named": true
-        },
-        {
-          "type": "type",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1115,6 +1111,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "kind_methods",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kind_method",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1589,7 +1600,18 @@
   {
     "type": "method_parameters",
     "named": true,
-    "fields": {},
+    "fields": {
+      "param_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -1753,6 +1775,7 @@
   {
     "type": "source_file",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -2270,6 +2293,10 @@
     }
   },
   {
+    "type": " ",
+    "named": false
+  },
+  {
     "type": "!",
     "named": false
   },
@@ -2427,7 +2454,8 @@
   },
   {
     "type": "comment",
-    "named": true
+    "named": true,
+    "extra": true
   },
   {
     "type": "const",
@@ -2511,7 +2539,8 @@
   },
   {
     "type": "multiline_comment",
-    "named": true
+    "named": true,
+    "extra": true
   },
   {
     "type": "mut",

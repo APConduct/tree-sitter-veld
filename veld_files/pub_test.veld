@@ -1,0 +1,6 @@
+# Basic test for public field access in a struct
+# Hello form highlighted Veld!
+struct BankAccount
+    balance: f64,
+    pub account_number: str,
+end
