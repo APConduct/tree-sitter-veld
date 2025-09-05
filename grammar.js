@@ -27,6 +27,7 @@ module.exports = grammar({
 
     [$.block],
     [$.source_file, $.block],
+
     [$.module_declaration],
     [$.import_path],
     [$.expression_statement, $.block_expression],
@@ -45,6 +46,7 @@ module.exports = grammar({
     [$.kind_method],
     [$.statement, $.if_statement],
     [$.if_statement, $.expression_statement],
+    [$.if_statement, $.expression_statement, $.if_expression],
     [$.generic_params],
   ],
 
@@ -53,6 +55,7 @@ module.exports = grammar({
 
     // Comments
     comment: ($) => token(choice(seq("#", /.*/), seq("#|", /.*/))),
+    comment: ($) => token(seq("#", /[^\r\n]*/)),
     multiline_comment: ($) =>
       token(
         choice(
@@ -139,6 +142,7 @@ module.exports = grammar({
         $.macro_invocation,
         $.expression_statement,
         prec(1, $.block),
+        prec(-10, $.block),
         $.break_statement,
         $.continue_statement,
       ),
@@ -514,6 +518,7 @@ module.exports = grammar({
 
     // Block and expressions
     block: ($) => seq(repeat1($.statement), "end"),
+    block: ($) => prec.right(seq(repeat1($.statement), "end")),
 
     expression_statement: ($) =>
       prec(1, seq(field("expression", $.expression), optional(";"))),

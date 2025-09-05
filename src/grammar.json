@@ -12,33 +12,15 @@
     "comment": {
       "type": "TOKEN",
       "content": {
-        "type": "CHOICE",
+        "type": "SEQ",
         "members": [
           {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "#"
-              },
-              {
-                "type": "PATTERN",
-                "value": ".*"
-              }
-            ]
+            "type": "STRING",
+            "value": "#"
           },
           {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "#|"
-              },
-              {
-                "type": "PATTERN",
-                "value": ".*"
-              }
-            ]
+            "type": "PATTERN",
+            "value": "[^\\r\\n]*"
           }
         ]
       }
@@ -460,6 +442,14 @@
         {
           "type": "PREC",
           "value": 1,
+          "content": {
+            "type": "SYMBOL",
+            "name": "block"
+          }
+        },
+        {
+          "type": "PREC",
+          "value": -10,
           "content": {
             "type": "SYMBOL",
             "name": "block"
@@ -3014,20 +3004,24 @@
       ]
     },
     "block": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "REPEAT1",
-          "content": {
-            "type": "SYMBOL",
-            "name": "statement"
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "REPEAT1",
+            "content": {
+              "type": "SYMBOL",
+              "name": "statement"
+            }
+          },
+          {
+            "type": "STRING",
+            "value": "end"
           }
-        },
-        {
-          "type": "STRING",
-          "value": "end"
-        }
-      ]
+        ]
+      }
     },
     "expression_statement": {
       "type": "PREC",
@@ -5078,6 +5072,11 @@
     [
       "if_statement",
       "expression_statement"
+    ],
+    [
+      "if_statement",
+      "expression_statement",
+      "if_expression"
     ],
     [
       "generic_params"
