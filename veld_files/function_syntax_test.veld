@@ -106,7 +106,7 @@ else
 end
 
 # Test all function calls and store results
-let result1 = traditional_func(1)        # Should be 2
+let result1 = traditional_func(1)     # Should be 2
 let result2 = arrow_func(2)              # Should be 4
 let result3 = arrow_block_func(3)        # Should be 12 ((3+3)*2)
 let result4 = inferred_func(4)           # Should be 8

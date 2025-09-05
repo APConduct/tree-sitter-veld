@@ -600,44 +600,29 @@ module.exports = grammar({
       ),
 
     method_call: ($) =>
-      choice(
-        // Higher precedence when object starts with lowercase (method call)
-        prec(
-          30,
-          seq(
-            field("object", /[a-z_][a-zA-Z0-9_]*/),
-            ".",
-            field("method", $.identifier),
-            field("arguments", $.arguments),
+      seq(
+        field(
+          "object",
+          choice(
+            $.identifier,
+            $.function_call,
+            $.method_call,
+            $.member_expression,
+            $.index_expression,
+            $.parenthesized_expression,
           ),
         ),
-        // Lower precedence for other cases
-        prec(
-          20,
-          seq(
-            field(
-              "object",
-              choice(
-                $.identifier,
-                $.function_call,
-                $.method_call,
-                $.member_expression,
-                $.index_expression,
-                $.parenthesized_expression,
-              ),
-            ),
-            ".",
-            field("method", $.identifier),
-            field("arguments", $.arguments),
-          ),
-        ),
+        ".",
+        field("method", $.identifier),
+        field("arguments", $.arguments),
       ),
 
     arguments: ($) => seq("(", optional(commaSep($.argument)), ")"),
 
     argument: ($) =>
       choice(
-        choice($.expression, $.unit_literal),
+        $.expression,
+        $.unit_literal,
         prec(
           2,
           seq(
