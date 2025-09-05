@@ -10,6 +10,8 @@ module.exports = grammar({
     [$.identifier, $.match_pattern],
     // Function calls vs types with generic parameters
     [$.function_call, $.generic_type],
+    // Function calls vs unit literal
+    [$.function_call, $.literal],
     // Lambda vs if expression
     [$.lambda, $.if_expression],
     // Block expression vs statement block
@@ -66,7 +68,6 @@ module.exports = grammar({
         $.string_literal,
         $.boolean_literal,
         $.char_literal,
-        $.unit_literal,
       ),
 
     number_literal: ($) => choice(/[0-9]+/, /[0-9]+\.[0-9]+/),
@@ -383,7 +384,7 @@ module.exports = grammar({
         field("name", $.identifier),
         optional(seq(":", field("type", $.type))),
         "=",
-        field("value", $.expression),
+        field("value", choice($.expression, $.unit_literal)),
       ),
 
     // Assignment
@@ -441,7 +442,12 @@ module.exports = grammar({
       ),
 
     return_statement: ($) =>
-      prec.right(seq("return", optional(field("value", $.expression)))),
+      prec.right(
+        seq(
+          "return",
+          optional(field("value", choice($.expression, $.unit_literal))),
+        ),
+      ),
 
     match_statement: ($) =>
       seq("match", field("value", $.expression), repeat($.match_arm), "end"),
@@ -512,15 +518,15 @@ module.exports = grammar({
 
     expression: ($) =>
       choice(
-        // Simple expressions (higher precedence)
-        prec(10, $.literal),
-        prec(10, $.identifier),
+        // Call expressions (highest precedence)
+        prec(15, $.function_call),
+        prec(11, $.method_call),
+        prec(11, $.member_expression),
+        prec(11, $.index_expression),
 
-        // Call expressions (high precedence)
-        prec(9, $.function_call),
-        prec(9, $.method_call),
-        prec(9, $.member_expression),
-        prec(9, $.index_expression),
+        // Simple expressions (high precedence)
+        prec(10, $.identifier),
+        prec(9, $.literal),
 
         // Other expressions
         $.binary_expression,
@@ -586,8 +592,8 @@ module.exports = grammar({
       ),
 
     function_call: ($) =>
-      prec.left(
-        9,
+      prec.right(
+        15,
         seq(field("function", $.identifier), field("arguments", $.arguments)),
       ),
 
@@ -613,10 +619,14 @@ module.exports = grammar({
 
     argument: ($) =>
       choice(
-        $.expression,
+        choice($.expression, $.unit_literal),
         prec(
           2,
-          seq(field("name", $.identifier), ":", field("value", $.expression)),
+          seq(
+            field("name", $.identifier),
+            ":",
+            field("value", choice($.expression, $.unit_literal)),
+          ),
         ),
       ),
 
@@ -741,7 +751,7 @@ module.exports = grammar({
         seq(
           field("name", $.identifier),
           "(",
-          commaSep($.struct_field_initializer),
+          commaSep1($.struct_field_initializer),
           ")",
         ),
       ),

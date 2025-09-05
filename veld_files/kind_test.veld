@@ -2,3 +2,5 @@ kind Test
     pub fn fun_one() -> f64
     pub fn fun_two() -> f64
 end
+
+let ran = test.run()

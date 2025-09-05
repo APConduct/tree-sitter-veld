@@ -20,6 +20,10 @@
           {
             "type": "expression",
             "named": true
+          },
+          {
+            "type": "unit_literal",
+            "named": true
           }
         ]
       }
@@ -30,6 +34,10 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "unit_literal",
           "named": true
         }
       ]
@@ -1207,10 +1215,6 @@
         {
           "type": "string_literal",
           "named": true
-        },
-        {
-          "type": "unit_literal",
-          "named": true
         }
       ]
     }
@@ -1767,6 +1771,10 @@
           {
             "type": "expression",
             "named": true
+          },
+          {
+            "type": "unit_literal",
+            "named": true
           }
         ]
       }
@@ -1975,7 +1983,7 @@
     },
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "struct_field_initializer",
@@ -2260,6 +2268,10 @@
         "types": [
           {
             "type": "expression",
+            "named": true
+          },
+          {
+            "type": "unit_literal",
             "named": true
           }
         ]
