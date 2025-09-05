@@ -23,6 +23,7 @@ module.exports = grammar({
 
     [$.expression, $.function_call, $.struct_expression],
     [$.return_statement],
+    [$.enum_variant_expression],
 
     [$.block],
     [$.source_file, $.block],
@@ -30,6 +31,7 @@ module.exports = grammar({
     [$.import_path],
     [$.expression_statement, $.block_expression],
     [$.member_expression, $.enum_variant_expression],
+    [$.method_call, $.enum_variant_expression, $.member_expression],
     [$.lambda, $.type_cast],
     [$.macro_invocation, $.macro_expression],
     [$.expression, $.tuple_literal],
@@ -520,7 +522,7 @@ module.exports = grammar({
       choice(
         // Call expressions (highest precedence)
         prec(15, $.function_call),
-        prec(11, $.method_call),
+        prec(20, $.method_call),
         prec(11, $.member_expression),
         prec(11, $.index_expression),
 
@@ -598,21 +600,37 @@ module.exports = grammar({
       ),
 
     method_call: ($) =>
-      seq(
-        field(
-          "object",
-          choice(
-            $.identifier,
-            $.function_call,
-            $.method_call,
-            $.member_expression,
-            $.index_expression,
-            $.parenthesized_expression, // Use parenthesized_expression directly
+      choice(
+        // Higher precedence when object starts with lowercase (method call)
+        prec(
+          30,
+          seq(
+            field("object", /[a-z_][a-zA-Z0-9_]*/),
+            ".",
+            field("method", $.identifier),
+            field("arguments", $.arguments),
           ),
         ),
-        ".",
-        field("method", $.identifier),
-        field("arguments", $.arguments),
+        // Lower precedence for other cases
+        prec(
+          20,
+          seq(
+            field(
+              "object",
+              choice(
+                $.identifier,
+                $.function_call,
+                $.method_call,
+                $.member_expression,
+                $.index_expression,
+                $.parenthesized_expression,
+              ),
+            ),
+            ".",
+            field("method", $.identifier),
+            field("arguments", $.arguments),
+          ),
+        ),
       ),
 
     arguments: ($) => seq("(", optional(commaSep($.argument)), ")"),
@@ -774,13 +792,35 @@ module.exports = grammar({
       ),
 
     enum_variant_expression: ($) =>
-      prec(
-        2,
-        seq(
-          field("enum", $.identifier),
-          ".",
-          field("variant", $.identifier),
-          optional(seq("(", optional(commaSep($.expression)), ")")),
+      choice(
+        // Enum variant without parentheses (higher precedence when no parentheses)
+        prec(
+          3,
+          seq(field("enum", $.identifier), ".", field("variant", $.identifier)),
+        ),
+        // Enum variant with parentheses (higher precedence when enum is capitalized)
+        prec(
+          25,
+          seq(
+            field("enum", $.identifier),
+            ".",
+            field("variant", $.identifier),
+            "(",
+            commaSep1($.expression),
+            ")",
+          ),
+        ),
+        // Lower precedence for other cases with parentheses
+        prec(
+          5,
+          seq(
+            field("enum", $.identifier),
+            ".",
+            field("variant", $.identifier),
+            "(",
+            commaSep1($.expression),
+            ")",
+          ),
         ),
       ),
 
