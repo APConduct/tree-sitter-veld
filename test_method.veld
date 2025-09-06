@@ -1,0 +1,4 @@
+# Test method calls
+let obj = test
+let result = obj.run()
+let another = test.method()

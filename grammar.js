@@ -44,6 +44,13 @@ module.exports = grammar({
     [$.lambda, $.tuple_literal],
     [$.lambda, $.unit_literal],
     [$.lambda, $.literal],
+    [$.member_access, $.lambda],
+    [$.member_access, $.fn_lambda],
+    [$.method_call, $.lambda],
+    [$.method_call, $.fn_lambda],
+    [$.method_call, $.member_access, $.lambda],
+    [$.method_call, $.member_access],
+    [$.method_call, $.member_access, $.fn_lambda],
   ],
 
   rules: {
@@ -79,6 +86,9 @@ module.exports = grammar({
         $.variable_declaration,
         $.function_declaration,
         $.proc_declaration,
+        $.struct_declaration,
+        $.enum_declaration,
+        $.kind_declaration,
         $.if_statement,
         $.return_statement,
         $.expression_statement,
@@ -125,6 +135,54 @@ module.exports = grammar({
     return_statement: ($) =>
       prec.right(seq("return", optional(field("value", $.expression)))),
 
+    struct_declaration: ($) =>
+      seq("struct", field("name", $.identifier), repeat($.struct_field), "end"),
+
+    struct_field: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        field("name", $.identifier),
+        ":",
+        field("type", $.type),
+        ",",
+      ),
+
+    enum_declaration: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        "enum",
+        field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
+        repeat($.enum_variant),
+        "end",
+      ),
+
+    generic_parameters: ($) => seq("<", commaSep1($.identifier), ">"),
+
+    enum_variant: ($) =>
+      seq(
+        field("name", $.identifier),
+        optional(seq("(", commaSep1(field("type", $.type)), ")")),
+      ),
+
+    kind_declaration: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        "kind",
+        field("name", $.identifier),
+        repeat($.kind_method),
+        "end",
+      ),
+
+    kind_method: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        "fn",
+        field("name", $.identifier),
+        field("parameters", $.parameters),
+        optional(seq("->", field("return_type", $.type))),
+      ),
+
     expression_statement: ($) => $.expression,
 
     // === BLOCKS ===
@@ -136,7 +194,7 @@ module.exports = grammar({
     // === TYPES ===
     type: ($) => choice($.basic_type, $.function_type, $.unit_type),
 
-    basic_type: ($) => choice($.identifier, "bool"),
+    basic_type: ($) => choice($.identifier, "bool", "f64", "str", "i32"),
     function_type: ($) =>
       seq("fn", "(", optionalCommaSep($.type), ")", "->", $.type),
     unit_type: ($) => "()",
@@ -158,8 +216,10 @@ module.exports = grammar({
         prec(PREC.CALL + 1, $.identifier),
         prec(PREC.CALL + 1, $.parenthesized_expression),
 
-        // Function calls
-        prec(PREC.CALL, $.function_call),
+        // Member access and function calls
+        prec(PREC.CALL, $.member_access),
+        prec(PREC.CALL + 1, $.function_call),
+        prec(PREC.CALL + 2, $.method_call),
 
         // Unary expressions
         prec(PREC.UNARY, $.unary_expression),
@@ -179,7 +239,18 @@ module.exports = grammar({
     function_call: ($) =>
       seq(field("function", $.identifier), field("arguments", $.arguments)),
 
+    method_call: ($) =>
+      seq(
+        field("object", $.expression),
+        ".",
+        field("method", $.identifier),
+        field("arguments", $.arguments),
+      ),
+
     arguments: ($) => seq("(", optionalCommaSep($.expression), ")"),
+
+    member_access: ($) =>
+      seq(field("object", $.expression), ".", field("member", $.identifier)),
 
     lambda: ($) =>
       prec.dynamic(
