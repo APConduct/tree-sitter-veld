@@ -2,3 +2,5 @@
 let obj = test
 let result = obj.run()
 let another = test.method()
+let with_args = obj.call(42)
+let complex = test.process(1, 2, 3)

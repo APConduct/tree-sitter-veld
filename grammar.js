@@ -46,11 +46,6 @@ module.exports = grammar({
     [$.lambda, $.literal],
     [$.member_access, $.lambda],
     [$.member_access, $.fn_lambda],
-    [$.method_call, $.lambda],
-    [$.method_call, $.fn_lambda],
-    [$.method_call, $.member_access, $.lambda],
-    [$.method_call, $.member_access],
-    [$.method_call, $.member_access, $.fn_lambda],
   ],
 
   rules: {
@@ -218,8 +213,7 @@ module.exports = grammar({
 
         // Member access and function calls
         prec(PREC.CALL, $.member_access),
-        prec(PREC.CALL + 1, $.function_call),
-        prec(PREC.CALL + 2, $.method_call),
+        prec(PREC.CALL + 10, $.function_call),
 
         // Unary expressions
         prec(PREC.UNARY, $.unary_expression),
@@ -237,20 +231,19 @@ module.exports = grammar({
     parenthesized_expression: ($) => seq("(", $.expression, ")"),
 
     function_call: ($) =>
-      seq(field("function", $.identifier), field("arguments", $.arguments)),
-
-    method_call: ($) =>
-      seq(
-        field("object", $.expression),
-        ".",
-        field("method", $.identifier),
-        field("arguments", $.arguments),
+      choice(
+        seq(field("function", $.identifier), field("arguments", $.arguments)),
+        seq(
+          field("function", $.member_access),
+          field("arguments", $.arguments),
+        ),
       ),
-
-    arguments: ($) => seq("(", optionalCommaSep($.expression), ")"),
 
     member_access: ($) =>
       seq(field("object", $.expression), ".", field("member", $.identifier)),
+
+    arguments: ($) =>
+      prec(PREC.CALL + 5, seq("(", optionalCommaSep($.expression), ")")),
 
     lambda: ($) =>
       prec.dynamic(
