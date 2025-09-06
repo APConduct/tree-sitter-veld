@@ -1,0 +1,4 @@
+# Simple lambda test file
+let single = x => x + 1
+let multi = (x, y) => x + y
+let empty = () => 42
