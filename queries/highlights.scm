@@ -6,7 +6,6 @@
 (string_literal) @string
 (number_literal) @number
 (boolean_literal) @boolean
-
 ; (char_literal) @character
 ; (unit_literal) @constant
 
@@ -124,7 +123,7 @@
 
 ; Enum variants
 (enum_variant
-  (identifier) @constructor)
+  (identifier) @type)
 
 
 ; Safe keywords (excluding the problematic ones)
@@ -145,6 +144,10 @@
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword
  (#match? @keyword "^(break|continue|macro|while|for|in|mod|import|as|match|where)$"))
+
+; identifier is type if it starts with a capital letter
+((identifier) @type
+    (#match? @type "^[A-Z]"))
 
 "true" @constant
 "false" @constant
@@ -191,4 +194,4 @@
 "=>" @operator.lambda
 
 ; Special highlighting for return type arrows
-"->" @operator.type
+; "->" @operator.type
