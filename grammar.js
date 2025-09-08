@@ -40,12 +40,7 @@ module.exports = grammar({
     [$.expression_statement, $.do_block],
     [$.if_statement, $.if_expression],
     [$.expression_statement, $.block],
-    [$.tuple_literal, $.parenthesized_expression],
-    [$.lambda, $.tuple_literal],
-    [$.lambda, $.unit_literal],
-    [$.lambda, $.literal],
-    [$.member_access, $.lambda],
-    [$.member_access, $.fn_lambda],
+    [$.tuple_literal, $.primary_expression],
   ],
 
   rules: {
@@ -206,14 +201,8 @@ module.exports = grammar({
         prec.dynamic(2000, $.lambda),
         prec.dynamic(2000, $.fn_lambda),
 
-        // Atoms (highest precedence)
-        prec(PREC.CALL + 1, $.literal),
-        prec(PREC.CALL + 1, $.identifier),
-        prec(PREC.CALL + 1, $.parenthesized_expression),
-
-        // Member access and function calls
-        prec(PREC.CALL, $.member_access),
-        prec(PREC.CALL + 10, $.function_call),
+        // Postfix expressions (function calls, member access)
+        $.postfix_expression,
 
         // Unary expressions
         prec(PREC.UNARY, $.unary_expression),
@@ -228,19 +217,34 @@ module.exports = grammar({
         $.do_block,
       ),
 
+    // Primary expressions that can be used as base for postfix operations
+    primary_expression: ($) =>
+      choice($.literal, $.identifier, $.parenthesized_expression),
+
+    // Postfix expressions include function calls and member access
+    postfix_expression: ($) =>
+      choice($.primary_expression, $.function_call, $.member_access),
+
     parenthesized_expression: ($) => seq("(", $.expression, ")"),
 
     function_call: ($) =>
-      choice(
-        seq(field("function", $.identifier), field("arguments", $.arguments)),
+      prec.left(
+        PREC.CALL,
         seq(
-          field("function", $.member_access),
+          field("function", $.postfix_expression),
           field("arguments", $.arguments),
         ),
       ),
 
     member_access: ($) =>
-      seq(field("object", $.expression), ".", field("member", $.identifier)),
+      prec.left(
+        PREC.CALL,
+        seq(
+          field("object", $.postfix_expression),
+          ".",
+          field("member", $.identifier),
+        ),
+      ),
 
     arguments: ($) =>
       prec(PREC.CALL + 5, seq("(", optionalCommaSep($.expression), ")")),
