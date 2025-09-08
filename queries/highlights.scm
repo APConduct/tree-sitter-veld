@@ -7,7 +7,7 @@
 (number_literal) @number
 (boolean_literal) @boolean
 ; (char_literal) @character
-(unit_literal) @constant
+; (unit_literal) @constant
 
 ; Types
 (basic_type) @type
@@ -30,58 +30,62 @@
   (identifier) @variable)
 (parameter
   (identifier) @parameter)
-; (module_declaration
-;   (identifier) @namespace)
+(kind_method
+    (identifier) @function)
+
+; Function calls - capture the function name identifier
+(function_call
+  function: (postfix_expression
+    (primary_expression
+      (identifier) @function.call)))
+
+; Member access function calls (prioritized over property access)
+(function_call
+  function: (postfix_expression
+    (member_access
+      member: (identifier) @function.call)))
+
+; Member access for property access
+(member_access
+  member: (identifier) @property)
+
+; Member access for object names
+(member_access
+  object: (postfix_expression
+    (primary_expression
+      (identifier) @variable)))
 
 ; Fields
 (struct_field
   (identifier) @property)
-; (struct_field_initializer
-;   (identifier) @property)
-; (member_expression
-;   (identifier) @property)
 
-; Statement nodes that represent keywords
-; (break_statement) @keyword
-; (continue_statement) @keyword
-; (return_statement) @keyword
-; Macro-related keywords
-; To change the behavior of these keywords, change '@keyword.macro' to '@function.macro' or similar
+; Enum variants
+(enum_variant
+  (identifier) @constructor)
 
-; (macro_declaration) @keyword.macro
-; (macro_expression) @keyword.macro
-; (macro_invocation) @keyword.macro
 
 ; Safe keywords (excluding the problematic ones)
 "fn" @keyword
 "proc" @keyword
 "let" @keyword
-; "var" @keyword
-; "const" @keyword
-; "mut" @keyword
 "struct" @keyword
 "kind" @keyword
-; "impl" @keyword
 "end" @keyword
 "if" @keyword
 "else" @keyword
 "then" @keyword
-; "while" @keyword
-; "for" @keyword
-; "in" @keyword
 "do" @keyword
-; "mod" @keyword
-; "import" @keyword
 "pub" @keyword
-; "as" @keyword
 "enum" @keyword
-; "match" @keyword
-; "where" @keyword
 "return" @keyword
 
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword
- (#match? @keyword "^(break|continue|macro)$"))
+ (#match? @keyword "^(break|continue|macro|while|for|in|mod|import|as|match|where)$"))
+
+"true" @constant
+"false" @constant
+
 
 ; Operators
 "=" @operator
@@ -119,3 +123,9 @@
 "." @punctuation.delimiter
 ":" @punctuation.delimiter
 ; ";" @punctuation.delimiter
+
+; Additional highlighting for lambda arrows
+"=>" @operator.lambda
+
+; Special highlighting for return type arrows
+"->" @operator.type
