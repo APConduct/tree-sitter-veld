@@ -59,6 +59,7 @@ module.exports = grammar({
         $.string_literal,
         $.boolean_literal,
         $.tuple_literal,
+        $.array_literal,
       ),
 
     number_literal: ($) => /\d+(\.\d+)?/,
@@ -67,6 +68,8 @@ module.exports = grammar({
 
     tuple_literal: ($) =>
       prec(-10, seq("(", commaSep1(choice($.expression, $.identifier)), ")")),
+
+    array_literal: ($) => seq("[", optionalCommaSep($.expression), "]"),
 
     // === STATEMENTS ===
     statement: ($) =>
@@ -86,6 +89,7 @@ module.exports = grammar({
       seq(
         "let",
         field("name", $.identifier),
+        optional(seq(":", field("type", $.type))),
         "=",
         field("value", $.expression),
       ),
@@ -180,12 +184,14 @@ module.exports = grammar({
       seq("do", repeat($.statement), optional($.expression), "end"),
 
     // === TYPES ===
-    type: ($) => choice($.basic_type, $.function_type, $.unit_type),
+    type: ($) =>
+      choice($.basic_type, $.function_type, $.unit_type, $.array_type),
 
     basic_type: ($) => choice($.identifier, "bool", "f64", "str", "i32"),
     function_type: ($) =>
       seq("fn", "(", optionalCommaSep($.type), ")", "->", $.type),
     unit_type: ($) => "()",
+    array_type: ($) => seq("[", $.type, "]"),
 
     // === PARAMETERS ===
     parameters: ($) => seq("(", optionalCommaSep($.parameter), ")"),

@@ -6,13 +6,14 @@
 (string_literal) @string
 (number_literal) @number
 (boolean_literal) @boolean
+
 ; (char_literal) @character
 ; (unit_literal) @constant
 
 ; Types
 (basic_type) @type
 (function_type) @type
-; (array_type) @type
+(array_type) @type
 ; (tuple_type) @type
 
 (primary_expression
@@ -179,8 +180,8 @@
 ")" @punctuation.delimiter
 ; "{" @punctuation.delimiter
 ; "}" @punctuation.delimiter
-; "[" @punctuation.delimiter
-; "]" @punctuation.delimiter
+"[" @punctuation.delimiter
+"]" @punctuation.delimiter
 "," @punctuation.delimiter
 "." @punctuation.delimiter
 ":" @punctuation.delimiter
