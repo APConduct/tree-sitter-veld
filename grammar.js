@@ -409,10 +409,32 @@ module.exports = grammar({
         "impl",
         optional(field("generics", $.generic_parameters)),
         field("type", $.type),
-        repeat($.impl_item),
+        repeat(choice($.impl_function, $.impl_proc)),
         "end",
       ),
 
-    impl_item: ($) => choice($.function_declaration, $.proc_declaration),
+    impl_function: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        "fn",
+        field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
+        field("parameters", $.parameters),
+        optional(seq("->", field("return_type", $.type))),
+        choice(seq("=>", field("body", $.expression)), field("body", $.block)),
+      ),
+
+    impl_proc: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        "proc",
+        field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
+        field("parameters", $.parameters),
+        choice(
+          seq(field("body", $.block)),
+          seq("=>", field("body", $.expression)),
+        ),
+      ),
   },
 });

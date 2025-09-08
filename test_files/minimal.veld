@@ -1,0 +1,8 @@
+impl<T, E> Result<T, E>
+    pub fn map<U>(self, f: (T) -> U) -> Result<U, E>
+        match self
+            Result.Ok(value) => Result.Ok(f(value)),
+            Result.Err(err) => Result.Err(err),
+        end
+    end
+end

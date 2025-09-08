@@ -21,21 +21,25 @@
 
 ; Identifiers in specific contexts
 (function_declaration
-  (identifier) @function)
+  name: (identifier) @function)
 (proc_declaration
-  (identifier) @function)
+  name: (identifier) @function)
 (struct_declaration
-  (identifier) @type)
+  name: (identifier) @type)
 (kind_declaration
-  (identifier) @type)
+  name: (identifier) @type)
 (enum_declaration
-  (identifier) @type)
+  name: (identifier) @type)
 (variable_declaration
-  (identifier) @variable)
+  name: (identifier) @variable)
 (parameter
-  (identifier) @parameter)
+  name: (identifier) @parameter)
 (kind_method
-    (identifier) @function)
+  name: (identifier) @function)
+(impl_function
+  name: (identifier) @function)
+(impl_proc
+  name: (identifier) @function)
 
 ; Match expressions and patterns
 "match" @keyword
@@ -75,6 +79,34 @@
   function: (postfix_expression
     (member_access
       member: (identifier) @function.call)))
+
+; Nested function calls in member access
+(function_call
+  arguments: (arguments
+    (expression
+      (postfix_expression
+        (function_call
+          function: (postfix_expression
+            (primary_expression
+              (identifier) @function.call)))))))
+
+; Function calls in match expressions
+(match_arm
+  body: (expression
+    (postfix_expression
+      (function_call
+        function: (postfix_expression
+          (member_access
+            member: (identifier) @function.call))))))
+
+; Function calls in arguments to other function calls
+(arguments
+  (expression
+    (postfix_expression
+      (function_call
+        function: (postfix_expression
+          (primary_expression
+            (identifier) @function.call))))))
 
 ; Member access for property access in specific contexts (not function calls)
 ; Property access in variable declarations
