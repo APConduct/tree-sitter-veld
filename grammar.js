@@ -58,14 +58,12 @@ module.exports = grammar({
         $.number_literal,
         $.string_literal,
         $.boolean_literal,
-        $.unit_literal,
         $.tuple_literal,
       ),
 
     number_literal: ($) => /\d+(\.\d+)?/,
     string_literal: ($) => seq('"', /[^"]*/, '"'),
     boolean_literal: ($) => choice("true", "false"),
-    unit_literal: ($) => "()",
 
     tuple_literal: ($) =>
       prec(-10, seq("(", commaSep1(choice($.expression, $.identifier)), ")")),
@@ -223,16 +221,19 @@ module.exports = grammar({
 
     // Postfix expressions include function calls and member access
     postfix_expression: ($) =>
-      choice($.primary_expression, $.function_call, $.member_access),
+      choice($.function_call, $.member_access, $.primary_expression),
 
     parenthesized_expression: ($) => seq("(", $.expression, ")"),
 
     function_call: ($) =>
-      prec.left(
-        PREC.CALL,
-        seq(
-          field("function", $.postfix_expression),
-          field("arguments", $.arguments),
+      prec.dynamic(
+        2,
+        prec.right(
+          PREC.CALL + 2,
+          seq(
+            field("function", $.postfix_expression),
+            field("arguments", $.arguments),
+          ),
         ),
       ),
 
@@ -247,7 +248,10 @@ module.exports = grammar({
       ),
 
     arguments: ($) =>
-      prec(PREC.CALL + 5, seq("(", optionalCommaSep($.expression), ")")),
+      prec.dynamic(
+        2,
+        prec(PREC.CALL + 10, seq("(", optionalCommaSep($.expression), ")")),
+      ),
 
     lambda: ($) =>
       prec.dynamic(
@@ -257,7 +261,7 @@ module.exports = grammar({
           seq(field("params", $.identifier), "=>", field("body", $.expression)),
           // Empty parameter lambda: () => expr
           seq(
-            field("params", $.unit_literal),
+            field("params", seq("(", ")")),
             "=>",
             field("body", $.expression),
           ),

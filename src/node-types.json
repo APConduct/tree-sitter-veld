@@ -564,19 +564,23 @@
         ]
       },
       "params": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
           {
             "type": "identifier",
             "named": true
           },
           {
             "type": "tuple_literal",
-            "named": true
-          },
-          {
-            "type": "unit_literal",
             "named": true
           }
         ]
@@ -605,10 +609,6 @@
         },
         {
           "type": "tuple_literal",
-          "named": true
-        },
-        {
-          "type": "unit_literal",
           "named": true
         }
       ]
@@ -1005,16 +1005,6 @@
     }
   },
   {
-    "type": "unit_literal",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "unit_type",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "variable_declaration",
     "named": true,
     "fields": {
@@ -1062,10 +1052,6 @@
   },
   {
     "type": "(",
-    "named": false
-  },
-  {
-    "type": "()",
     "named": false
   },
   {
@@ -1236,6 +1222,10 @@
   {
     "type": "true",
     "named": false
+  },
+  {
+    "type": "unit_type",
+    "named": true
   },
   {
     "type": "||",
