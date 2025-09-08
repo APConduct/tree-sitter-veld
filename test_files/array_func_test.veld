@@ -1,0 +1,17 @@
+# Test array function types specifically
+
+# Simple array to string function
+let f1: [i32] -> str = array_to_string
+
+# Function that takes array and returns function
+fn process_array(arr: [str]) -> i32 -> bool
+    len => len > arr.length()
+end
+
+# Function that returns array function type
+fn get_mapper() -> [i32] -> [str]
+    arr => arr.map(int_to_string)
+end
+
+# Nested array function types
+let complex: [[i32]] -> [str] -> bool = nested_processor

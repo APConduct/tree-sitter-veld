@@ -100,6 +100,7 @@ module.exports = grammar({
         optional(field("visibility", "pub")),
         "fn",
         field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
         field("parameters", $.parameters),
         optional(seq("->", field("return_type", $.type))),
         choice(seq("=>", field("body", $.expression)), field("body", $.block)),
@@ -110,6 +111,7 @@ module.exports = grammar({
         optional(field("visibility", "pub")),
         "proc",
         field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
         field("parameters", $.parameters),
         choice(
           seq(field("body", $.block)),
@@ -201,6 +203,10 @@ module.exports = grammar({
       choice(
         seq("fn", "(", optionalCommaSep($.type), ")", "->", $.type),
         seq("(", optionalCommaSep($.type), ")", "->", $.type),
+        prec.right(
+          1,
+          seq(choice($.basic_type, $.array_type, $.generic_type), "->", $.type),
+        ),
       ),
     unit_type: ($) => "()",
     array_type: ($) => seq("[", $.type, "]"),

@@ -1,0 +1,3 @@
+pub fn ok<T, E>(value: T) -> Result<T, E>
+    Result.Ok(value)
+end

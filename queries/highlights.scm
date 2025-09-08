@@ -41,6 +41,10 @@
 (impl_proc
   name: (identifier) @function)
 
+; Generic type parameters
+(generic_parameters
+  (identifier) @type.parameter)
+
 ; Match expressions and patterns
 "match" @keyword
 (wildcard_pattern) @variable.builtin

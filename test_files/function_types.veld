@@ -1,0 +1,46 @@
+# Test various function type syntaxes
+
+# Simple arrow function types
+let f1: i32 -> str = some_func
+let f2: str -> bool = other_func
+
+# Chained arrow function types (right associative)
+let f3: i32 -> str -> bool = curried_func
+
+# Parenthesized function types
+let f4: (i32) -> str = paren_func
+let f5: (i32, str) -> bool = multi_param_func
+
+# Function keyword syntax
+let f6: fn(i32) -> str = keyword_func
+let f7: fn(i32, str, bool) -> () = void_func
+
+# Generic function types
+let f8: T -> U = generic_func
+let f9: (T, U) -> V = generic_multi
+
+# Array of function types
+let funcs: [i32 -> str] = [f1, f4, f6]
+
+# Function taking function as parameter
+fn higher_order<T, U>(func: T -> U, value: T) -> U
+    func(value)
+end
+
+# Function returning function
+fn curry<A, B, C>(func: (A, B) -> C) -> A -> B -> C
+    (a, b) => func(a, b)
+end
+
+# Complex nested function types
+fn complex_func(
+    mapper: (i32) -> str,
+    reducer: (str, str) -> str,
+    filter: str -> bool
+) -> [i32] -> str
+    numbers => do
+        let mapped = numbers.map(mapper)
+        let filtered = mapped.filter(filter)
+        filtered.reduce(reducer)
+    end
+end

@@ -1,0 +1,13 @@
+pub fn ok<T, E>(value: T) -> Result<T, E>
+    Result.Ok(value)
+end
+
+pub fn err<T, E>(error: E) -> Result<T, E>
+    Result.Err(error)
+end
+
+impl<A, B> SomeType<A, B>
+    pub fn transform<U, V>(self, func: A -> U) -> SomeType<U, V>
+        do_something()
+    end
+end

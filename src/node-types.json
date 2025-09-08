@@ -397,6 +397,16 @@
           }
         ]
       },
+      "generics": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "generic_parameters",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -447,6 +457,18 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "array_type",
+          "named": true
+        },
+        {
+          "type": "basic_type",
+          "named": true
+        },
+        {
+          "type": "generic_type",
+          "named": true
+        },
         {
           "type": "type",
           "named": true
@@ -1147,6 +1169,16 @@
           },
           {
             "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "generics": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "generic_parameters",
             "named": true
           }
         ]
