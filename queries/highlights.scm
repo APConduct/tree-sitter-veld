@@ -39,15 +39,57 @@
     (primary_expression
       (identifier) @function.call)))
 
-; Member access function calls (prioritized over property access)
+; Member access function calls (override property highlighting)
 (function_call
   function: (postfix_expression
     (member_access
       member: (identifier) @function.call)))
 
-; Member access for property access
-(member_access
-  member: (identifier) @property)
+; Member access for property access in specific contexts (not function calls)
+; Property access in variable declarations
+(variable_declaration
+  value: (expression
+    (postfix_expression
+      (member_access
+        member: (identifier) @property))))
+
+; Property access in expression statements (standalone)
+(expression_statement
+  (expression
+    (postfix_expression
+      (member_access
+        member: (identifier) @property))))
+
+; Property access in binary expressions
+(binary_expression
+  (expression
+    (postfix_expression
+      (member_access
+        member: (identifier) @property))))
+
+; Property access in function call arguments
+(arguments
+  (expression
+    (postfix_expression
+      (member_access
+        member: (identifier) @property))))
+
+; Property access in if conditions
+(if_expression
+  condition: (expression
+    (postfix_expression
+      (member_access
+        member: (identifier) @property))))
+
+; Property access in return statements
+(return_statement
+  value: (expression
+    (postfix_expression
+      (member_access
+        member: (identifier) @property))))
+
+
+
 
 ; Member access for object names
 (member_access
