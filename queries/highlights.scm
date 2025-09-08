@@ -13,6 +13,7 @@
 (basic_type) @type
 (function_type) @type
 (array_type) @type
+(generic_type) @type
 ; (tuple_type) @type
 
 (primary_expression
@@ -43,6 +44,8 @@
   constructor: (qualified_identifier) @constructor)
 (identifier_pattern
   (identifier) @variable)
+
+; Impl blocks
 
 ; Lambda parameters - direct identifiers in tuple literals
 (lambda
@@ -148,6 +151,8 @@
 "pub" @keyword
 "enum" @keyword
 "return" @keyword
+"impl" @keyword
+"self" @variable.builtin
 
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword

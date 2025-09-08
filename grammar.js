@@ -80,6 +80,7 @@ module.exports = grammar({
         $.struct_declaration,
         $.enum_declaration,
         $.kind_declaration,
+        $.impl_declaration,
         $.if_statement,
         $.return_statement,
         $.expression_statement,
@@ -96,6 +97,7 @@ module.exports = grammar({
 
     function_declaration: ($) =>
       seq(
+        optional(field("visibility", "pub")),
         "fn",
         field("name", $.identifier),
         field("parameters", $.parameters),
@@ -105,6 +107,7 @@ module.exports = grammar({
 
     proc_declaration: ($) =>
       seq(
+        optional(field("visibility", "pub")),
         "proc",
         field("name", $.identifier),
         field("parameters", $.parameters),
@@ -185,18 +188,37 @@ module.exports = grammar({
 
     // === TYPES ===
     type: ($) =>
-      choice($.basic_type, $.function_type, $.unit_type, $.array_type),
+      choice(
+        $.basic_type,
+        $.function_type,
+        $.unit_type,
+        $.array_type,
+        $.generic_type,
+      ),
 
     basic_type: ($) => choice($.identifier, "bool", "f64", "str", "i32"),
     function_type: ($) =>
-      seq("fn", "(", optionalCommaSep($.type), ")", "->", $.type),
+      choice(
+        seq("fn", "(", optionalCommaSep($.type), ")", "->", $.type),
+        seq("(", optionalCommaSep($.type), ")", "->", $.type),
+      ),
     unit_type: ($) => "()",
     array_type: ($) => seq("[", $.type, "]"),
+    generic_type: ($) =>
+      seq(
+        field("name", $.identifier),
+        "<",
+        field("args", commaSep1($.type)),
+        ">",
+      ),
 
     // === PARAMETERS ===
     parameters: ($) => seq("(", optionalCommaSep($.parameter), ")"),
     parameter: ($) =>
-      seq(field("name", $.identifier), ":", field("type", $.type)),
+      choice(
+        seq(field("name", $.identifier), ":", field("type", $.type)),
+        field("name", "self"),
+      ),
 
     // === EXPRESSIONS ===
     expression: ($) =>
@@ -381,5 +403,16 @@ module.exports = grammar({
 
     qualified_identifier: ($) =>
       prec.left(seq($.identifier, repeat1(seq(".", $.identifier)))),
+
+    impl_declaration: ($) =>
+      seq(
+        "impl",
+        optional(field("generics", $.generic_parameters)),
+        field("type", $.type),
+        repeat($.impl_item),
+        "end",
+      ),
+
+    impl_item: ($) => choice($.function_declaration, $.proc_declaration),
   },
 });
