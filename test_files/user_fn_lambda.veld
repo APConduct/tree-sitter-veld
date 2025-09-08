@@ -1,0 +1,6 @@
+let block_demi = fn()
+    # test for demi-lamba block functions
+    # demi because it uses 'fn' and does not use '=>' syntax
+    let x = 10
+    x
+end

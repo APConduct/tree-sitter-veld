@@ -1,0 +1,48 @@
+# Test file for fn() lambda syntax issues
+
+# This should be a lambda function using fn syntax without =>
+let block_demi = fn()
+    # test for demi-lamba block functions
+    # demi because it uses 'fn' and does not use '=>' syntax
+    let x = 10
+    x
+end
+
+# Test various fn lambda forms
+let simple_fn = fn() 42 end
+
+let fn_with_params = fn(x: i32)
+    x * 2
+end
+
+let fn_with_multiple_params = fn(a: i32, b: str)
+    do_something(a, b)
+end
+
+let fn_with_return_type = fn(x: i32) -> str
+    x.to_string()
+end
+
+# Compare with arrow lambda syntax
+let arrow_lambda = () => do
+    let x = 10
+    x
+end
+
+let arrow_with_params = (x, y) => x + y
+
+# Test in variable declarations
+let processor = fn(data: [i32]) -> [str]
+    data.map(x => x.to_string())
+end
+
+# Test as function parameters
+fn higher_order(callback: fn(i32) -> str) -> str
+    callback(42)
+end
+
+# Test nested fn lambdas
+let nested = fn()
+    let inner = fn(x: i32) x * x end
+    inner(5)
+end

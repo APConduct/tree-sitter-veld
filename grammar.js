@@ -232,6 +232,7 @@ module.exports = grammar({
         // Lambda expressions (highest precedence to resolve conflicts)
         prec.dynamic(2000, $.lambda),
         prec.dynamic(2000, $.fn_lambda),
+        prec.dynamic(2000, $.fn_block_lambda),
 
         // Postfix expressions (function calls, member access)
         $.postfix_expression,
@@ -318,6 +319,16 @@ module.exports = grammar({
         optional(seq("->", field("return_type", $.type))),
         "=>",
         field("body", $.expression),
+      ),
+
+    fn_block_lambda: ($) =>
+      seq(
+        "fn",
+        "(",
+        field("params", optionalCommaSep($.fn_lambda_param)),
+        ")",
+        optional(seq("->", field("return_type", $.type))),
+        field("body", $.block),
       ),
 
     fn_lambda_param: ($) =>

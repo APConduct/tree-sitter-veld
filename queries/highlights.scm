@@ -33,7 +33,7 @@
 (variable_declaration
   name: (identifier) @variable)
 (parameter
-  name: (identifier) @parameter)
+  name: (identifier) @variable)
 (kind_method
   name: (identifier) @function)
 (impl_function
@@ -58,7 +58,7 @@
 ; Lambda parameters - direct identifiers in tuple literals
 (lambda
   params: (tuple_literal
-    (identifier) @parameter))
+    (identifier) @variable))
 
 ; Lambda parameters - wrapped identifiers in tuple literals
 (lambda
@@ -66,11 +66,16 @@
     (expression
       (postfix_expression
         (primary_expression
-          (identifier) @parameter)))))
+          (identifier) @variable)))))
 
 ; Lambda parameters - single identifier
 (lambda
-  params: (identifier) @parameter)
+  params: (identifier) @variable)
+
+; fn_block_lambda parameters
+(fn_block_lambda
+  params: (fn_lambda_param
+    name: (identifier) @variable))
 
 ; Function calls - capture the function name identifier
 (function_call
