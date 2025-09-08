@@ -145,7 +145,7 @@ module.exports = grammar({
         "enum",
         field("name", $.identifier),
         optional(field("generics", $.generic_parameters)),
-        repeat($.enum_variant),
+        repeat(seq($.enum_variant, optional(","))),
         "end",
       ),
 
@@ -216,6 +216,7 @@ module.exports = grammar({
 
         // Control flow
         prec(PREC.IF, $.if_expression),
+        $.match_expression,
 
         // Do blocks
         $.do_block,
@@ -344,5 +345,41 @@ module.exports = grammar({
         field("alternative", $.expression),
         "end",
       ),
+
+    match_expression: ($) =>
+      seq("match", field("value", $.expression), repeat1($.match_arm), "end"),
+
+    match_arm: ($) =>
+      seq(field("pattern", $.pattern), "=>", field("body", $.expression), ","),
+
+    pattern: ($) =>
+      choice(
+        $.wildcard_pattern,
+        $.constructor_pattern,
+        $.literal_pattern,
+        $.identifier_pattern,
+      ),
+
+    wildcard_pattern: ($) => "_",
+
+    constructor_pattern: ($) =>
+      choice(
+        prec.left(
+          seq(
+            field("constructor", $.qualified_identifier),
+            "(",
+            field("args", commaSep($.pattern)),
+            ")",
+          ),
+        ),
+        field("constructor", $.qualified_identifier),
+      ),
+
+    identifier_pattern: ($) => $.identifier,
+
+    literal_pattern: ($) => prec(-1, $.literal),
+
+    qualified_identifier: ($) =>
+      prec.left(seq($.identifier, repeat1(seq(".", $.identifier)))),
   },
 });

@@ -36,6 +36,14 @@
 (kind_method
     (identifier) @function)
 
+; Match expressions and patterns
+"match" @keyword
+(wildcard_pattern) @variable.builtin
+(constructor_pattern
+  constructor: (qualified_identifier) @constructor)
+(identifier_pattern
+  (identifier) @variable)
+
 ; Lambda parameters - direct identifiers in tuple literals
 (lambda
   params: (tuple_literal
