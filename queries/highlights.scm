@@ -15,6 +15,9 @@
 ; (array_type) @type
 ; (tuple_type) @type
 
+(primary_expression
+  (identifier) @variable)
+
 ; Identifiers in specific contexts
 (function_declaration
   (identifier) @function)
@@ -32,6 +35,23 @@
   (identifier) @parameter)
 (kind_method
     (identifier) @function)
+
+; Lambda parameters - direct identifiers in tuple literals
+(lambda
+  params: (tuple_literal
+    (identifier) @parameter))
+
+; Lambda parameters - wrapped identifiers in tuple literals
+(lambda
+  params: (tuple_literal
+    (expression
+      (postfix_expression
+        (primary_expression
+          (identifier) @parameter)))))
+
+; Lambda parameters - single identifier
+(lambda
+  params: (identifier) @parameter)
 
 ; Function calls - capture the function name identifier
 (function_call
