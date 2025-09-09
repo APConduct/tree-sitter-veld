@@ -183,7 +183,16 @@ module.exports = grammar({
       prec.right(seq("return", optional(field("value", $.expression)))),
 
     struct_declaration: ($) =>
-      seq("struct", field("name", $.identifier), repeat($.struct_field), "end"),
+      seq(
+        optional("pub"),
+        "struct",
+        field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
+        choice(
+          seq(repeat($.struct_field), "end"),
+          seq("(", repeat($.struct_field), ")"),
+        ),
+      ),
 
     struct_field: ($) =>
       seq(
@@ -191,7 +200,7 @@ module.exports = grammar({
         field("name", $.identifier),
         ":",
         field("type", $.type),
-        ",",
+        optional(","),
       ),
 
     enum_declaration: ($) =>

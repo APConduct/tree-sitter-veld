@@ -1,5 +1,10 @@
 # Import syntax
 import ops.{Add, Sub, Ord, Eq}
 
+pub struct Test
+    start: i32,
+    stop: i32,
+end
+
 # Terse struct definition syntax
 pub struct RangeInclusive<T>(start: T, stop: T)
