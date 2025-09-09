@@ -146,7 +146,7 @@ module.exports = grammar({
         optional(field("visibility", "pub")),
         "import",
         field("name", $.identifier),
-        optional(seq(".", field("name", $.identifier))),
+        optional(repeat(seq(".", field("name", $.identifier)))),
         optional(
           choice(
             optional(seq("as", $.identifier)),
