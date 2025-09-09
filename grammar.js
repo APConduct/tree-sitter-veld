@@ -95,6 +95,7 @@ module.exports = grammar({
 
     module_declaration: ($) =>
       seq(
+        optional(field("visibility", "pub")),
         "mod",
         field("name", $.identifier),
         choice("...", seq(repeat($.statement), "end")),

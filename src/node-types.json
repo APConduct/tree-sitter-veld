@@ -1227,6 +1227,16 @@
             "named": true
           }
         ]
+      },
+      "visibility": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "pub",
+            "named": false
+          }
+        ]
       }
     },
     "children": {
