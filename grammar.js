@@ -154,7 +154,40 @@ module.exports = grammar({
         "end",
       ),
 
-    generic_parameters: ($) => seq("<", commaSep1($.identifier), ">"),
+    generic_parameters: ($) => seq("<", commaSep1($.generic_parameter), ">"),
+
+    generic_parameter: ($) =>
+      choice(
+        $.identifier,
+        seq(
+          field("name", $.identifier),
+          ":",
+          field("constraint", $.type_constraint),
+        ),
+      ),
+
+    type_constraint: ($) =>
+      choice(
+        $.trait_bound,
+        seq($.trait_bound, repeat(seq("+", $.trait_bound))),
+      ),
+
+    trait_bound: ($) =>
+      choice(
+        $.identifier,
+        seq(
+          field("trait", $.identifier),
+          "<",
+          commaSep1($.associated_type),
+          ">",
+        ),
+      ),
+
+    associated_type: ($) =>
+      choice(
+        $.type,
+        seq(field("name", $.identifier), "=", field("type", $.type)),
+      ),
 
     enum_variant: ($) =>
       seq(

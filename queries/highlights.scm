@@ -42,8 +42,24 @@
   name: (identifier) @function)
 
 ; Generic type parameters
-(generic_parameters
+(generic_parameter
   (identifier) @type.parameter)
+
+; Generic parameters with names
+(generic_parameter
+  name: (identifier) @type.parameter)
+
+; Trait bounds in constraints
+(trait_bound
+  (identifier) @type)
+
+; Trait bounds with trait field
+(trait_bound
+  trait: (identifier) @type)
+
+; Associated type names
+(associated_type
+  name: (identifier) @type.parameter)
 
 ; Match expressions and patterns
 "match" @keyword
