@@ -282,6 +282,8 @@ module.exports = grammar({
 
         // Do blocks
         $.do_block,
+
+        $.plex_record_expression,
       ),
 
     // Primary expressions that can be used as base for postfix operations
@@ -431,6 +433,19 @@ module.exports = grammar({
         $.literal_pattern,
         $.identifier_pattern,
       ),
+
+    plex_record_expression: ($) =>
+      seq("{", field("fields", $.record_field_list), "}"),
+
+    record_field_list: ($) =>
+      seq(
+        field("fields", $.record_field),
+        repeat(seq(",", field("fields", $.record_field))),
+        optional(","),
+      ),
+
+    record_field: ($) =>
+      seq(field("name", $.identifier), ":", field("expression", $.expression)),
 
     wildcard_pattern: ($) => "_",
 
