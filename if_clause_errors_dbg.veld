@@ -1,0 +1,9 @@
+if test_value > 40 then
+    let in_if_scope = "greater than 40"
+end
+
+if test_value == 42 then
+    let exact_match = true
+else
+    let not_exact = false
+end

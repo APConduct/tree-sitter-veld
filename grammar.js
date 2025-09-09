@@ -185,13 +185,24 @@ module.exports = grammar({
       ),
 
     if_statement: ($) =>
-      seq(
-        "if",
-        field("condition", $.expression),
-        "then",
-        field("consequence", $.expression),
-        optional(seq("else", field("alternative", $.expression))),
-        "end",
+      prec(
+        PREC.IF,
+        seq(
+          "if",
+          field("condition", $.expression),
+          "then",
+          repeat(field("pre_consequence", $.statement)),
+          optional(field("consequence", $.expression)),
+          choice(
+            "end",
+            seq(
+              "else",
+              repeat(field("pre_consequence", $.statement)),
+              optional(field("alternative", $.expression)),
+              "end",
+            ),
+          ),
+        ),
       ),
 
     return_statement: ($) =>
