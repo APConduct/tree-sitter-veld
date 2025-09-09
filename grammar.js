@@ -158,7 +158,7 @@ module.exports = grammar({
     import_list: ($) =>
       seq(
         field("name", $.identifier),
-        optional(seq("as", $.identifier)),
+        optional(seq("as", field("alias", $.identifier))),
         repeat(
           seq(
             ",",
