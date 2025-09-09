@@ -85,6 +85,7 @@ module.exports = grammar({
         $.if_statement,
         $.return_statement,
         $.expression_statement,
+        $.import_statement,
       ),
 
     variable_declaration: ($) =>
@@ -139,6 +140,33 @@ module.exports = grammar({
 
     plex_type_field: ($) =>
       seq(field("name", $.identifier), ":", field("type", $.type)),
+
+    import_statement: ($) =>
+      seq(
+        "import",
+        field("name", $.identifier),
+        optional(seq(".", $.identifier)),
+        optional(
+          choice(
+            optional(seq("as", $.identifier)),
+            optional(seq(".", "{", $.import_list, "}")),
+          ),
+        ),
+      ),
+
+    import_list: ($) =>
+      seq(
+        field("names", $.identifier),
+        optional(seq("as", $.identifier)),
+        repeat(
+          seq(
+            ",",
+            field("names", $.identifier),
+            optional(seq("as", $.identifier)),
+          ),
+        ),
+        optional(","),
+      ),
 
     if_statement: ($) =>
       seq(

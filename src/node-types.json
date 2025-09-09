@@ -899,6 +899,62 @@
     }
   },
   {
+    "type": "import_list",
+    "named": true,
+    "fields": {
+      "names": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "import_statement",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "import_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "kind_declaration",
     "named": true,
     "fields": {
@@ -1562,6 +1618,10 @@
           "named": true
         },
         {
+          "type": "import_statement",
+          "named": true
+        },
+        {
           "type": "kind_declaration",
           "named": true
         },
@@ -1929,6 +1989,10 @@
     "named": false
   },
   {
+    "type": "as",
+    "named": false
+  },
+  {
     "type": "bool",
     "named": false
   },
@@ -1983,6 +2047,10 @@
   },
   {
     "type": "impl",
+    "named": false
+  },
+  {
+    "type": "import",
     "named": false
   },
   {

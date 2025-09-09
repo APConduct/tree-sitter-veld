@@ -209,6 +209,12 @@
 (enum_variant
   (identifier) @type)
 
+(record_field
+    (identifier) @property)
+
+(plex_type_field
+    (identifier) @property)
+
 
 ; Safe keywords (excluding the problematic ones)
 "fn" @keyword
@@ -228,13 +234,10 @@
 "self" @variable.builtin
 "and" @keyword
 "or" @keyword
-"mut" @keyword
-"var" @keyword
-"const" @keyword
 
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword
- (#match? @keyword "^(break|continue|macro|while|for|in|mod|import|as|match|where)$"))
+ (#match? @keyword "^(break|continue|macro|while|for|in|mod|import|as|match|where|plex)$"))
 
 ; identifier is type if it starts with a capital letter
 ((identifier) @type
