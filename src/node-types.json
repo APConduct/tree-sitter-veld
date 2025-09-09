@@ -928,6 +928,16 @@
     "type": "import_statement",
     "named": true,
     "fields": {
+      "alias": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": true,
         "required": true,
@@ -953,10 +963,6 @@
       "multiple": false,
       "required": false,
       "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
         {
           "type": "import_list",
           "named": true
