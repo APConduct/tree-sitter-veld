@@ -143,6 +143,7 @@ module.exports = grammar({
 
     import_statement: ($) =>
       seq(
+        optional(field("visibility", "pub")),
         "import",
         field("name", $.identifier),
         optional(seq(".", field("name", $.identifier))),
