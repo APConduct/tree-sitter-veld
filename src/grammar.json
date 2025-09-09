@@ -227,6 +227,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "plex_declaration"
+        },
+        {
+          "type": "SYMBOL",
           "name": "if_statement"
         },
         {
@@ -520,6 +524,130 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    "plex_declaration": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "visibility",
+              "content": {
+                "type": "STRING",
+                "value": "pub"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "SYMBOL",
+          "name": "plex_type"
+        }
+      ]
+    },
+    "plex_type": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "plex_type_field_list"
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "plex_type_field_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "fields",
+          "content": {
+            "type": "SYMBOL",
+            "name": "plex_type_field"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "FIELD",
+                "name": "fields",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "plex_type_field"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ","
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "plex_type_field": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "FIELD",
+          "name": "type",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type"
+          }
         }
       ]
     },
@@ -1218,6 +1346,10 @@
         {
           "type": "SYMBOL",
           "name": "generic_type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "plex_type"
         }
       ]
     },

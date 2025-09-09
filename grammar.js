@@ -81,6 +81,7 @@ module.exports = grammar({
         $.enum_declaration,
         $.kind_declaration,
         $.impl_declaration,
+        $.plex_declaration,
         $.if_statement,
         $.return_statement,
         $.expression_statement,
@@ -118,6 +119,26 @@ module.exports = grammar({
           seq("=>", field("body", $.expression)),
         ),
       ),
+
+    plex_declaration: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        field("name", $.identifier),
+        "=",
+        $.plex_type,
+      ),
+
+    plex_type: ($) => seq("{", $.plex_type_field_list, "}"),
+
+    plex_type_field_list: ($) =>
+      seq(
+        field("fields", $.plex_type_field),
+        repeat(seq(",", field("fields", $.plex_type_field))),
+        optional(","),
+      ),
+
+    plex_type_field: ($) =>
+      seq(field("name", $.identifier), ":", field("type", $.type)),
 
     if_statement: ($) =>
       seq(
@@ -229,6 +250,7 @@ module.exports = grammar({
         $.unit_type,
         $.array_type,
         $.generic_type,
+        $.plex_type,
       ),
 
     basic_type: ($) => choice($.identifier, "bool", "f64", "str", "i32"),
