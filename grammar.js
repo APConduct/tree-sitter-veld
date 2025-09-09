@@ -305,6 +305,7 @@ module.exports = grammar({
         $.array_type,
         $.generic_type,
         $.plex_type,
+        $.tuple_type,
       ),
 
     basic_type: ($) => choice($.identifier, "bool", "f64", "str", "i32"),
@@ -326,6 +327,7 @@ module.exports = grammar({
         field("args", commaSep1($.type)),
         ">",
       ),
+    tuple_type: ($) => seq("(", field("fields", commaSep($.type)), ")"),
 
     // === PARAMETERS ===
     parameters: ($) => seq("(", optionalCommaSep($.parameter), ")"),

@@ -1875,6 +1875,26 @@
     }
   },
   {
+    "type": "tuple_type",
+    "named": true,
+    "fields": {
+      "fields": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "type",
     "named": true,
     "fields": {},
@@ -1900,6 +1920,10 @@
         },
         {
           "type": "plex_type",
+          "named": true
+        },
+        {
+          "type": "tuple_type",
           "named": true
         },
         {
