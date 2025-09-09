@@ -902,7 +902,17 @@
     "type": "import_list",
     "named": true,
     "fields": {
-      "names": {
+      "alias": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "name": {
         "multiple": true,
         "required": true,
         "types": [
@@ -914,7 +924,7 @@
       }
     },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": false,
       "types": [
         {

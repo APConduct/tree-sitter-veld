@@ -781,7 +781,7 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "names",
+          "name": "name",
           "content": {
             "type": "SYMBOL",
             "name": "identifier"
@@ -819,7 +819,7 @@
               },
               {
                 "type": "FIELD",
-                "name": "names",
+                "name": "name",
                 "content": {
                   "type": "SYMBOL",
                   "name": "identifier"
@@ -836,8 +836,12 @@
                         "value": "as"
                       },
                       {
-                        "type": "SYMBOL",
-                        "name": "identifier"
+                        "type": "FIELD",
+                        "name": "alias",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "identifier"
+                        }
                       }
                     ]
                   },
