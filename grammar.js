@@ -141,7 +141,7 @@ module.exports = grammar({
         field("name", $.identifier),
         optional(field("generics", $.generic_parameters)),
         "=",
-        $.plex_type,
+        choice($.identifier, $.plex_type),
       ),
 
     plex_type: ($) => seq("{", $.plex_type_field_list, "}"),

@@ -674,8 +674,17 @@
           "value": "="
         },
         {
-          "type": "SYMBOL",
-          "name": "plex_type"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "plex_type"
+            }
+          ]
         }
       ]
     },
