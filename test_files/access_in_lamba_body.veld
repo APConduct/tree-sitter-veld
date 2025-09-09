@@ -1,0 +1,1 @@
+let maybe_value = request.headers.get("Authorization").and_then(token => auth.validate(token)).map(user => user.id)

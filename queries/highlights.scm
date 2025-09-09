@@ -195,6 +195,16 @@
     (member_access
       member: (identifier) @property)))
 
+(lambda
+                  params: (identifier )
+                  body: (expression
+                    (postfix_expression
+                      (member_access
+                        object: (postfix_expression
+                          (primary_expression
+                            (identifier )))
+                        member: (identifier) @variable))))
+
 ; ; Function calls in chained member access
 ; (member_access
 ;   object: (postfix_expression
