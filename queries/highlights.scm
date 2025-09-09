@@ -252,10 +252,11 @@
 "import" @keyword
 "as" @keyword
 "mod" @keyword
+"plex" @keyword
 
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword
- (#match? @keyword "^(break|continue|macro|while|for|in|match|where|plex)$"))
+ (#match? @keyword "^(break|continue|macro|while|for|in|match|where)$"))
 
 ; identifier is type if it starts with a capital letter
 ((identifier) @type
