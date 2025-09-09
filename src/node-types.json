@@ -1775,6 +1775,10 @@
     "extra": true
   },
   {
+    "type": "const",
+    "named": false
+  },
+  {
     "type": "do",
     "named": false
   },
@@ -1831,6 +1835,10 @@
     "named": false
   },
   {
+    "type": "mut",
+    "named": false
+  },
+  {
     "type": "not",
     "named": false
   },
@@ -1877,6 +1885,10 @@
   {
     "type": "unit_type",
     "named": true
+  },
+  {
+    "type": "var",
+    "named": false
   },
   {
     "type": "wildcard_pattern",

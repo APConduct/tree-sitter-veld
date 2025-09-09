@@ -1,0 +1,22 @@
+# Test fn_block_lambda with parameters to verify highlighting
+
+let simple_fn_with_param = fn(x)
+    x * 2
+end
+
+let fn_with_multiple_params = fn(name: str, age: i32, active: bool)
+    if active then
+        name + " is " + age.to_string()
+    else
+        "inactive user"
+    end
+end
+
+let fn_with_complex_types = fn(mapper: i32 -> str, values: [i32]) -> [str]
+    values.map(mapper)
+end
+
+let fn_block_lambda = fn(x: i32) -> i32 => do
+    let temp = x + 80
+    temp * 3
+end

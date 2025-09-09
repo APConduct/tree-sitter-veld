@@ -185,15 +185,11 @@
     (primary_expression
       (identifier) @variable)))
 
-; ; General member access highlighting for nested chains
-; (member_access
-;   member: (identifier) @property)
-
 ; ; Member access in nested chains (object side)
 (member_access
   object: (postfix_expression
     (member_access
-      member: (identifier) @property)))
+      member: (identifier) @property))) ; Like 'headers' in 'request.headers.get("Authorization")'
 
 (lambda
                   params: (identifier )
@@ -203,42 +199,7 @@
                         object: (postfix_expression
                           (primary_expression
                             (identifier )))
-                        member: (identifier) @variable))))
-
-; ; Function calls in chained member access
-; (member_access
-;   object: (postfix_expression
-;     (function_call
-;       function: (postfix_expression
-;         (member_access
-;           member: (identifier) @function.call)))))
-
-; ; Deeply nested function calls in chains
-; (function_call
-;   function: (postfix_expression
-;     (member_access
-;       object: (postfix_expression
-;         (function_call
-;           function: (postfix_expression
-;             (member_access
-;               member: (identifier) @function.call))))
-;       member: (identifier) @function.call)))
-
-; ; Triple nested function calls
-; (function_call
-;   function: (postfix_expression
-;     (member_access
-;       object: (postfix_expression
-;         (function_call
-;           function: (postfix_expression
-;             (member_access
-;               object: (postfix_expression
-;                 (function_call
-;                   function: (postfix_expression
-;                     (member_access
-;                       member: (identifier) @function.call))))
-;               member: (identifier) @function.call))))
-;       member: (identifier) @function.call)))
+                        member: (identifier) @property))))
 
 ; Fields
 (struct_field
@@ -265,6 +226,11 @@
 "return" @keyword
 "impl" @keyword
 "self" @variable.builtin
+"and" @keyword
+"or" @keyword
+"mut" @keyword
+"var" @keyword
+"const" @keyword
 
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword
