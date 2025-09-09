@@ -1,0 +1,94 @@
+# Test file for generic type constraints and associated types
+
+# Basic constraint syntax
+pub fn abs<T: Neg<Output = T>>(x: T) -> T
+    if x < T(0) then
+       -x
+    else
+        x
+    end
+end
+
+# Multiple constraints
+fn process<T: Clone + Debug + Display>(item: T) -> T
+    print~("{}", item)
+    item.clone()
+end
+
+# Where clause syntax
+fn complex_function<T, U, V>(a: T, b: U) -> V
+where
+    T: Into<U>,
+    U: From<T> + Clone,
+    V: Default + Debug
+    let converted = a.into()
+    let cloned = converted.clone()
+    V::default()
+end
+
+# Associated type constraints
+fn map_items<I, F, T, U>(iter: I, func: F) -> Vec<U>
+where
+    I: Iterator<Item = T>,
+    F: Fn(T) -> U
+    iter.map(func).collect()
+end
+
+# Lifetime constraints (if supported)
+fn longest<'a, T: Clone>(x: &'a T, y: &'a T) -> &'a T
+    if should_use_first() then x else y end
+end
+
+# Complex nested constraints
+fn advanced<T, U, E>() -> Result<T, E>
+where
+    T: Into<U> + Clone + Debug,
+    U: From<T> + Display + Default,
+    E: Error + Send + Sync + 'static
+    Ok(U.default().into())
+end
+
+# Default type parameters
+fn with_defaults<T = i32, U = String>(x: T) -> U
+    U.from_string(x.to_string())
+end
+
+# Const generics (if supported)
+fn array_processor<T, const N: usize>(arr: [T; N]) -> [T; N]
+    arr.map(|x| x)
+end
+
+# Self constraints in impl blocks
+impl<T: Clone + Debug> MyStruct<T>
+where
+    T: Display
+    fn print_value(self) -> ()
+        println!("{}", self.value)
+    end
+
+    fn clone_value<U: From<T>>(self) -> U
+        U.from(self.value.clone())
+    end
+end
+
+# Generic enums with constraints
+pub enum Result<T, E = DefaultError>
+where
+    T: Clone,
+    E: Error
+    Ok(T),
+    Err(E),
+end
+
+# Generic type aliases with constraints
+type ProcessorFn<T, U> = fn(T) -> U
+where
+    T: Send + Sync,
+    U: Send + Sync
+
+# Higher-ranked trait bounds (advanced)
+fn closure_processor<F>(f: F) -> i32
+where
+    F: for<'a> Fn(&'a str) -> i32
+    f("test")
+end

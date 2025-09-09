@@ -1,0 +1,7 @@
+pub fn abs<T: Neg<Output = T>>(x: T) -> T
+    if x < T(0) then
+       -x
+    else
+        x
+    end
+end

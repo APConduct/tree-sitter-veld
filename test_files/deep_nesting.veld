@@ -1,0 +1,30 @@
+# Test deep nesting of member access chains
+
+# Very deep property access
+let deep_config = app.services.user_management.config.database.connection.pool.settings.max_connections
+
+# Mixed property and function calls in deep chains
+let result = system.modules.authentication.providers.oauth.google.client.new().configure().build().authenticate(credentials)
+
+# Deep enum/variant access
+let status = Response.Success.Data.User.Profile.Avatar.Url("https://example.com/avatar.jpg")
+
+# Nested module access with array operations
+let processed_data = data.processors.text.transformers.lowercase.apply(input.trim().split(" ").filter(x => x.length() > 0))
+
+# Complex service locator pattern
+let service = container.services.resolve("UserService").create_instance().with_config(app.config.services.user)
+
+# Deep type access patterns
+let parser = Json.Parsers.Strict.WithValidation.new()
+let validator = Schema.Validators.String.MinLength(5).MaxLength(100).Required()
+
+# Deeply nested function calls
+let final_result = pipeline.stages.validation.rules.email.check(user.profile.contact.email.primary.address)
+
+# Chain with conditional access
+let maybe_value = request.headers.get("Authorization").and_then(token => auth.validate(token)).map(user => user.id)
+
+# Deep generic type access
+let collection = Collections.HashMap.WithCapacity(1000).new()
+let stream = Streams.Parallel.Ordered.from_iterator(data.iter())

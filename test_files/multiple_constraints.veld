@@ -1,0 +1,102 @@
+# Test file for multiple generic type constraints
+
+# Multiple constraints with +
+fn process<T: Clone + Debug + Display>(item: T) -> T
+    print~("Processing: {}", item)
+    item.clone()
+end
+
+# Multiple parameters with different constraints
+fn compare<T: PartialEq + Clone, U: Display + Default>(a: T, b: T, fallback: U) -> U
+    if a == b then
+        U.default()
+    else
+        fallback
+    end
+end
+
+# Complex constraints with associated types
+fn transform<I, T, U>(iter: I, func: T -> U) -> Vec<U>
+where
+    I: Iterator<Item = T>,
+    T: Clone + Send,
+    U: Display + Default
+    iter.map(func).collect()
+end
+
+# Nested generic constraints
+fn advanced<T, U, V>(processor: T, converter: U) -> Result<V, String>
+where
+    T: Fn(String) -> Result<V, String>,
+    U: Into<String> + Clone,
+    V: Debug + Send + Sync
+    let input = converter.into()
+    processor(input)
+end
+
+# Default type parameters with constraints
+fn with_defaults<T: Clone = String, U: Default = i32>(value: T) -> U
+    U.default()
+end
+
+# Higher-kinded types and lifetime constraints
+fn callback_processor<F, T, U>(callback: F, data: T) -> U
+where
+    F: for<'a> Fn(&'a T) -> U,
+    T: Send + Sync + 'static,
+    U: Clone + Debug
+    callback(&data)
+end
+
+# Self constraints in impl block
+impl<T: Clone + Debug + Display> Container<T>
+where
+    T: PartialEq + Send
+
+    pub fn new(value: T) -> Self
+        Self { value }
+    end
+
+    pub fn process<U: From<T> + Display>(self, converter: T -> U) -> U
+        let converted = converter(self.value.clone())
+        print~("Converted: {}", converted)
+        converted
+    end
+
+    pub fn compare_and_update<U: Into<T> + Clone>(mut self, other: U) -> Self
+    where
+        U: Debug
+        let new_value = other.into()
+        if self.value == new_value then
+            self
+        else
+            self.value = new_value
+            self
+        end
+    end
+end
+
+# Enum with constrained generics
+pub enum Operation<T, E>
+where
+    T: Clone + Send,
+    E: Error + Display
+    Success(T),
+    Failure(E),
+    Pending,
+end
+
+# Type alias with constraints
+type ProcessorFn<T, U, E> = fn(T) -> Result<U, E>
+where
+    T: Send + Sync + Clone,
+    U: Display + Debug,
+    E: Error + Send + Sync + 'static
+
+# Const generics with constraints
+fn array_operation<T, const N: usize>(array: [T; N]) -> [T; N]
+where
+    T: Clone + Default,
+    N: PartialOrd<usize>
+    array.map(x => x.clone())
+end

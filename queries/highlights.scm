@@ -185,6 +185,51 @@
     (primary_expression
       (identifier) @variable)))
 
+; ; General member access highlighting for nested chains
+; (member_access
+;   member: (identifier) @property)
+
+; ; Member access in nested chains (object side)
+; (member_access
+;   object: (postfix_expression
+;     (member_access
+;       member: (identifier) @property)))
+
+; ; Function calls in chained member access
+; (member_access
+;   object: (postfix_expression
+;     (function_call
+;       function: (postfix_expression
+;         (member_access
+;           member: (identifier) @function.call)))))
+
+; ; Deeply nested function calls in chains
+; (function_call
+;   function: (postfix_expression
+;     (member_access
+;       object: (postfix_expression
+;         (function_call
+;           function: (postfix_expression
+;             (member_access
+;               member: (identifier) @function.call))))
+;       member: (identifier) @function.call)))
+
+; ; Triple nested function calls
+; (function_call
+;   function: (postfix_expression
+;     (member_access
+;       object: (postfix_expression
+;         (function_call
+;           function: (postfix_expression
+;             (member_access
+;               object: (postfix_expression
+;                 (function_call
+;                   function: (postfix_expression
+;                     (member_access
+;                       member: (identifier) @function.call))))
+;               member: (identifier) @function.call))))
+;       member: (identifier) @function.call)))
+
 ; Fields
 (struct_field
   (identifier) @property)

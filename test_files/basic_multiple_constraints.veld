@@ -1,0 +1,26 @@
+# Test basic multiple constraint syntax
+
+# Single constraint
+fn simple<T: Clone>(x: T) -> T
+    x.clone()
+end
+
+# Multiple constraints with +
+fn multiple<T: Clone + Debug>(x: T) -> T
+    x.clone()
+end
+
+# Two parameters with constraints
+fn two_params<T: Clone, U: Debug>(x: T, y: U) -> T
+    x.clone()
+end
+
+# Associated type constraint
+fn with_assoc<T: Iterator<Item = String>>(iter: T) -> String
+    iter.next().unwrap_or("default".to_string())
+end
+
+# Multiple associated types
+fn complex<T: Trait<Item = String, Error = i32>>(x: T) -> String
+    x.process()
+end

@@ -1,0 +1,39 @@
+# Test file for nested member access highlighting
+
+# Simple nested access
+let foo_bar = std.option.some(69)
+
+# Longer chains
+let result = app.database.connection.execute("SELECT * FROM users")
+
+# Mixed access patterns
+let value = config.server.settings.port
+let data = service.api.client.request.headers.get("Content-Type")
+
+# Function calls in chains
+let processed = utils.string.helpers.trim().to_lowercase()
+let response = http.client.new().timeout(5000).get("https://api.example.com")
+
+# Property access vs function calls
+let host = server.config.host
+let port = server.config.get_port()
+let url = server.config.build_url("api", "v1")
+
+# Complex nested examples
+let user_service = app.services.user_management.create_service()
+let auth_token = security.auth.jwt.generate_token(user_id, permissions)
+let cache_key = storage.cache.redis.build_key("user", user_id, "profile")
+
+# Array/collection access in chains
+let first_item = data.items.first().unwrap()
+let filtered = collection.filter(predicate).map(transformer).collect()
+
+# Enum/variant access
+let success_value = Result.Ok(42)
+let error_case = Result.Err("Something went wrong")
+let option_value = Option.Some(data.value)
+
+# Type-like access
+let default_config = Config.default()
+let empty_vec = Vec.new()
+let hash_map = HashMap.with_capacity(100)

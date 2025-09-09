@@ -1,0 +1,10 @@
+# Test file with user's exact problematic cases
+
+# Case 1: Very deep property chain ending in function call
+let final_result = pipeline.stages.validation.rules.email.check(user.profile.contact.email.primary.address)
+
+# Case 2: Chained function calls with complex arguments and lambdas
+let maybe_value = request.headers.get("Authorization").and_then(token => auth.validate(token)).map(user => user.id)
+
+# Case 3: Type-like access patterns with deep nesting
+let stream = Streams.Parallel.Ordered.from_iterator(data.iter())

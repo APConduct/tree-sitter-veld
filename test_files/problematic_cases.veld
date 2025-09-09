@@ -1,0 +1,24 @@
+# Test file for problematic highlighting cases
+
+# Case 1: Very deep property chain ending in function call
+let final_result = pipeline.stages.validation.rules.email.check(user.profile.contact.email.primary.address)
+
+# Case 2: Chained function calls with complex arguments
+let maybe_value = request.headers.get("Authorization").and_then(token => auth.validate(token)).map(user => user.id)
+
+# Case 3: Type-like access patterns with deep nesting
+let stream = Streams.Parallel.Ordered.from_iterator(data.iter())
+
+# Additional similar cases for testing
+let complex_chain = system.modules.authentication.providers.oauth.google.client.authenticate(credentials.token.value)
+
+let nested_functions = data.transform().filter(x => x.is_valid()).group_by(item => item.category).collect()
+
+let type_chain = Collections.HashMap.WithCapacity(1000).from_entries(pairs.iter())
+
+let service_call = app.services.user_service.repository.find_by_email(user.contact.primary_email.address)
+
+# Mixed patterns
+let result = Config.Database.Connection.Pool.acquire().execute_query("SELECT * FROM users").fetch_all()
+
+let processor = Text.Processors.Markdown.WithExtensions("tables", "footnotes").parse(content.raw.text)

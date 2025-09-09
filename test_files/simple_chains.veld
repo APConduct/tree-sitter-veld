@@ -1,0 +1,22 @@
+# Simple test for chained function calls
+
+# Basic chain
+let result = obj.method1().method2().method3()
+
+# Chain with property access
+let value = service.config.get_value().to_string()
+
+# Mixed property and function chains
+let data = api.client.new().get("/users").parse()
+
+# Chain starting with function call
+let processed = get_data().filter(predicate).map(transform).collect()
+
+# Simple two-step chain
+let trimmed = input.trim().to_lowercase()
+
+# Property then function
+let size = collection.items.length()
+
+# Function then property then function
+let final = builder.build().status.check()

@@ -1,0 +1,9 @@
+# Simple generic test to check current grammar structure
+
+fn simple<T>(x: T) -> T
+    x
+end
+
+fn with_constraint<T: Clone>(x: T) -> T
+    x.clone()
+end
