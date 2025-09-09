@@ -86,6 +86,18 @@ module.exports = grammar({
         $.return_statement,
         $.expression_statement,
         $.import_statement,
+        $.re_export_statement,
+        $.module_declaration,
+      ),
+
+    re_export_statement: ($) =>
+      seq("pub", "(", field("export", $.identifier), ")"),
+
+    module_declaration: ($) =>
+      seq(
+        "mod",
+        field("name", $.identifier),
+        choice("...", seq(repeat($.statement), "end")),
       ),
 
     variable_declaration: ($) =>

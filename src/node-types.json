@@ -1215,6 +1215,32 @@
     }
   },
   {
+    "type": "module_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "parameter",
     "named": true,
     "fields": {
@@ -1532,6 +1558,22 @@
     }
   },
   {
+    "type": "re_export_statement",
+    "named": true,
+    "fields": {
+      "export": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "record_field",
     "named": true,
     "fields": {
@@ -1642,11 +1684,19 @@
           "named": true
         },
         {
+          "type": "module_declaration",
+          "named": true
+        },
+        {
           "type": "plex_declaration",
           "named": true
         },
         {
           "type": "proc_declaration",
+          "named": true
+        },
+        {
+          "type": "re_export_statement",
           "named": true
         },
         {
@@ -1963,6 +2013,10 @@
     "named": false
   },
   {
+    "type": "...",
+    "named": false
+  },
+  {
     "type": "/",
     "named": false
   },
@@ -2089,6 +2143,10 @@
   },
   {
     "type": "match",
+    "named": false
+  },
+  {
+    "type": "mod",
     "named": false
   },
   {
