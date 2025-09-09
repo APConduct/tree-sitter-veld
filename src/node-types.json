@@ -974,6 +974,16 @@
     "type": "kind_declaration",
     "named": true,
     "fields": {
+      "generics": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "generic_parameters",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,

@@ -1,0 +1,3 @@
+pub kind Iterable<T>
+    fn iter(self) -> Iterator<T>
+end

@@ -274,6 +274,7 @@ module.exports = grammar({
         optional(field("visibility", "pub")),
         "kind",
         field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
         repeat($.kind_method),
         "end",
       ),
