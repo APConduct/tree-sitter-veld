@@ -511,13 +511,13 @@ module.exports = grammar({
       ),
 
     plex_record_expression: ($) =>
-      seq("{", field("fields", $.record_field_list), "}"),
-
-    record_field_list: ($) =>
       seq(
-        field("fields", $.record_field),
-        repeat(seq(",", field("fields", $.record_field))),
-        optional(","),
+        "{",
+        field(
+          "fields",
+          seq(repeat(seq(",", field("fields", $.record_field))), optional(",")),
+        ),
+        "}",
       ),
 
     record_field: ($) =>
