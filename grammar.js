@@ -137,7 +137,9 @@ module.exports = grammar({
     plex_declaration: ($) =>
       seq(
         optional(field("visibility", "pub")),
+        "plex",
         field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
         "=",
         $.plex_type,
       ),
