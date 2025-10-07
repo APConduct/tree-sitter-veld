@@ -300,6 +300,10 @@
           "named": true
         },
         {
+          "type": "range_expression",
+          "named": true
+        },
+        {
           "type": "unary_expression",
           "named": true
         }
@@ -1602,6 +1606,21 @@
     }
   },
   {
+    "type": "range_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "re_export_statement",
     "named": true,
     "fields": {
@@ -1749,6 +1768,10 @@
         },
         {
           "type": "struct_declaration",
+          "named": true
+        },
+        {
+          "type": "variable_assignment",
           "named": true
         },
         {
@@ -1993,6 +2016,32 @@
     }
   },
   {
+    "type": "variable_assignment",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "variable_declaration",
     "named": true,
     "fields": {
@@ -2018,7 +2067,7 @@
       },
       "value": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "expression",
@@ -2081,7 +2130,15 @@
     "named": false
   },
   {
+    "type": "..",
+    "named": false
+  },
+  {
     "type": "...",
+    "named": false
+  },
+  {
+    "type": "..=",
     "named": false
   },
   {

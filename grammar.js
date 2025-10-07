@@ -15,14 +15,15 @@ const PREC = {
   MULTI: 11,
   PLUS: 10,
   CONCAT: 9,
-  COMPARE: 8,
-  EQUALITY: 7,
-  AND: 6,
-  OR: 5,
-  PIPE: 4,
-  ASSIGN: 3,
-  IF: 2,
-  STATEMENT: 1,
+  RANGE: 8,
+  COMPARE: 7,
+  EQUALITY: 6,
+  AND: 5,
+  OR: 4,
+  PIPE: 3,
+  ASSIGN: 2,
+  IF: 1,
+  STATEMENT: 0,
 };
 
 // Helper functions
@@ -88,6 +89,7 @@ module.exports = grammar({
         $.import_statement,
         $.re_export_statement,
         $.module_declaration,
+        $.variable_assignment,
       ),
 
     re_export_statement: ($) =>
@@ -106,9 +108,11 @@ module.exports = grammar({
         choice("let", seq("let", "mut"), "var", "const"),
         field("name", $.identifier),
         optional(seq(":", field("type", $.type))),
-        "=",
-        field("value", $.expression),
+        optional(seq("=", field("value", $.expression))),
       ),
+
+    variable_assignment: ($) =>
+      seq(field("name", $.identifier), "=", field("value", $.expression)),
 
     function_declaration: ($) =>
       seq(
@@ -373,6 +377,18 @@ module.exports = grammar({
         $.do_block,
 
         $.plex_record_expression,
+
+        $.range_expression,
+      ),
+
+    range_expression: ($) =>
+      prec.right(
+        PREC.RANGE,
+        seq(
+          optional($.expression),
+          choice("..", "..="),
+          optional($.expression),
+        ),
       ),
 
     // Primary expressions that can be used as base for postfix operations
