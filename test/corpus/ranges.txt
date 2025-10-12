@@ -1,0 +1,295 @@
+================================================================================
+Basic exclusive range
+================================================================================
+
+let range = 1..5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal)))))
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal))))))))))
+
+================================================================================
+Basic inclusive range
+================================================================================
+
+let range = 1..=5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal)))))
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal))))))))))
+
+================================================================================
+Range from (no start)
+================================================================================
+
+let range = ..20
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal))))))))))
+
+================================================================================
+Range to (no end)
+================================================================================
+
+let range = 10..
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal))))))))))
+
+================================================================================
+Full range
+================================================================================
+
+let range = ..
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression)))))
+
+================================================================================
+Range with variables
+================================================================================
+
+let range = start..end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (identifier))))
+          (expression
+            (postfix_expression
+              (primary_expression
+                (identifier)))))))))
+
+================================================================================
+Range with expressions
+================================================================================
+
+let range = (1 + 2)..(5 * 3)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (parenthesized_expression
+                  (expression
+                    (binary_expression
+                      (expression
+                        (postfix_expression
+                          (primary_expression
+                            (literal
+                              (number_literal)))))
+                      (expression
+                        (postfix_expression
+                          (primary_expression
+                            (literal
+                              (number_literal)))))))))))
+          (expression
+            (postfix_expression
+              (primary_expression
+                (parenthesized_expression
+                  (expression
+                    (binary_expression
+                      (expression
+                        (postfix_expression
+                          (primary_expression
+                            (literal
+                              (number_literal)))))
+                      (expression
+                        (postfix_expression
+                          (primary_expression
+                            (literal
+                              (number_literal))))))))))))))))
+
+================================================================================
+Range with floating point numbers
+================================================================================
+
+let range = 1.5..3.14
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal)))))
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal))))))))))
+
+================================================================================
+Inclusive range to (no start)
+================================================================================
+
+let range = ..=100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (variable_declaration
+      name: (identifier)
+      value: (expression
+        (range_expression
+          (expression
+            (postfix_expression
+              (primary_expression
+                (literal
+                  (number_literal))))))))))
+
+================================================================================
+Multiple ranges in function
+================================================================================
+
+fn test_ranges()
+    let r1 = 1..5
+    let r2 = 1..=5
+    let r3 = ..20
+    let r4 = 10..
+    let r5 = ..
+end
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (statement
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters)
+      body: (block
+        (statement
+          (variable_declaration
+            name: (identifier)
+            value: (expression
+              (range_expression
+                (expression
+                  (postfix_expression
+                    (primary_expression
+                      (literal
+                        (number_literal)))))
+                (expression
+                  (postfix_expression
+                    (primary_expression
+                      (literal
+                        (number_literal)))))))))
+        (statement
+          (variable_declaration
+            name: (identifier)
+            value: (expression
+              (range_expression
+                (expression
+                  (postfix_expression
+                    (primary_expression
+                      (literal
+                        (number_literal)))))
+                (expression
+                  (postfix_expression
+                    (primary_expression
+                      (literal
+                        (number_literal)))))))))
+        (statement
+          (variable_declaration
+            name: (identifier)
+            value: (expression
+              (range_expression
+                (expression
+                  (postfix_expression
+                    (primary_expression
+                      (literal
+                        (number_literal)))))))))
+        (statement
+          (variable_declaration
+            name: (identifier)
+            value: (expression
+              (range_expression
+                (expression
+                  (postfix_expression
+                    (primary_expression
+                      (literal
+                        (number_literal)))))))))
+        (statement
+          (variable_declaration
+            name: (identifier)
+            value: (expression
+              (range_expression))))))))

@@ -19,6 +19,15 @@
 (primary_expression
   (identifier) @variable)
 
+(if_statement
+      condition: (expression
+        (postfix_expression
+          (member_access
+            object: (postfix_expression
+              (primary_expression
+                (identifier)))
+            member: (identifier) @property))))
+
 ; Identifiers in specific contexts
 (function_declaration
   name: (identifier) @function)
@@ -73,30 +82,42 @@
 
 ; Lambda parameters - direct identifiers in tuple literals
 (lambda
-  params: (tuple_literal
-    (identifier) @variable))
+  params: (fn_lambda_param
+    (identifier) @property))
+
+(lambda
+  params: (fn_lambda_param
+    name: (identifier) @variable))
 
 ; Lambda parameters - wrapped identifiers in tuple literals
-(lambda
-  params: (tuple_literal
-    (expression
-      (postfix_expression
-        (primary_expression
-          (identifier) @variable)))))
+; (lambda
+;   params: (fn_lambda_param
+;     (expression
+;       (postfix_expression
+;         (primary_expression
+;           (identifier) @variable)))))
+
+(fn_lambda_param
+  name: (identifier) @property)
 
 ; Lambda parameters - single identifier
 (lambda
-  params: (identifier) @variable)
+  params: (identifier) @property)
 
 (fn_lambda_param
-  name: (identifier) @variable)
+  name: (identifier) @property)
 
 (fn_lambda_param
-  (identifier) @variable)
+  (identifier) @property)
 
 ; Function calls - capture the function name identifier
 (function_call
   function: (postfix_expression
+    (primary_expression
+      (identifier) @function.call)))
+
+(macro_call
+  macro: (postfix_expression
     (primary_expression
       (identifier) @function.call)))
 
@@ -184,7 +205,7 @@
 (member_access
   object: (postfix_expression
     (primary_expression
-      (identifier) @variable)))
+      (identifier) @property)))
 
 ; ; Member access in nested chains (object side)
 (member_access
@@ -253,10 +274,14 @@
 "as" @keyword
 "mod" @keyword
 "plex" @keyword
+"const" @keyword
+"var" @keyword
+"mut" @keyword
+"impl" @keyword
 
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword
- (#match? @keyword "^(break|continue|macro|while|for|in|match|where)$"))
+ (#match? @keyword "^(break|continue|macro|while|for|in|match|where|impl)$"))
 
 ; identifier is type if it starts with a capital letter
 ((identifier) @type

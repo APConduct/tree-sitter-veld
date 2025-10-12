@@ -1,0 +1,87 @@
+# If expression
+let max = if a > b then a else b end
+
+# Multi-line if statement
+if user.is_admin() then
+    grant_access()
+    log_access()
+else if user.has_permission("read") then
+    grant_read_only()
+else
+    deny_access()
+end
+
+# Pattern matching with guards
+match value
+    Person(name, age) where age <= 18 => handle_adult(name)
+    Person(name, age) => handle_boomer(name, age)
+    _ => handle_unknown()
+end
+
+# While loop
+while connection.is_active() do
+    process_next_message()
+end
+
+# For loop (iteration)
+for item in collection do
+    process(item)
+end
+
+# For loop with index
+for (item, index) in collection.with_index() do
+    println~("Item {} at index {}", item, index)
+end
+
+# Infinite loop
+while true do
+    if should_exit() then
+        break
+    end
+    do_work()
+end
+
+# For with range
+for i in 0..10 do
+    println~("{}", i)  # Prints 0 to 9
+end
+
+# Kind declaration (interface)
+kind Serializable
+    fn serialize(self) -> [u8]
+    fn deserialize(data: [u8]) -> Self
+end
+
+# Explicit implementation
+struct User
+    id: u64,
+    name: str,
+end
+
+impl User <- Serializable
+    fn serialize(self) -> [u8]
+        # implementation
+    end
+
+    fn deserialize(data: [u8]) -> User
+        # implementation
+    end
+end
+
+# Implicit (structural) implementation
+struct Message
+    content: str,
+    timestamp: u64,
+
+    # Methods defined inline satisfy kind requirements
+    fn serialize(self) -> [u8]
+        # implementation
+    end
+
+    fn deserialize(data: [u8]) -> Message
+        # implementation
+    end
+end
+
+
+# struct Point(f32, f32)

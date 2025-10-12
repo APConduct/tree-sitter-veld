@@ -15,14 +15,15 @@ const PREC = {
   MULTI: 11,
   PLUS: 10,
   CONCAT: 9,
-  COMPARE: 8,
-  EQUALITY: 7,
-  AND: 6,
-  OR: 5,
-  PIPE: 4,
-  ASSIGN: 3,
-  IF: 2,
-  STATEMENT: 1,
+  RANGE: 8,
+  COMPARE: 7,
+  EQUALITY: 6,
+  AND: 5,
+  OR: 4,
+  PIPE: 3,
+  ASSIGN: 2,
+  IF: 1,
+  STATEMENT: 0,
 };
 
 // Helper functions
@@ -38,9 +39,15 @@ module.exports = grammar({
   conflicts: ($) => [
     // Keep conflicts minimal and only add when necessary
     [$.expression_statement, $.do_block],
-    [$.if_statement, $.if_expression],
     [$.expression_statement, $.block],
     [$.tuple_literal, $.primary_expression],
+    [$.tuple_literal, $.arguments],
+    [$.basic_type, $.generic_type],
+    [$.primary_expression, $.fn_lambda_param],
+    [$.lambda],
+    [$.primary_expression, $.lambda],
+    [$.if_statement],
+    [$.if_statement, $.if_expression],
   ],
 
   rules: {
@@ -88,6 +95,7 @@ module.exports = grammar({
         $.import_statement,
         $.re_export_statement,
         $.module_declaration,
+        $.variable_assignment,
       ),
 
     re_export_statement: ($) =>
@@ -106,9 +114,11 @@ module.exports = grammar({
         choice("let", seq("let", "mut"), "var", "const"),
         field("name", $.identifier),
         optional(seq(":", field("type", $.type))),
-        "=",
-        field("value", $.expression),
+        optional(seq(field("equal_sign", "="), field("value", $.expression))),
       ),
+
+    variable_assignment: ($) =>
+      seq(field("name", $.identifier), "=", field("value", $.expression)),
 
     function_declaration: ($) =>
       seq(
@@ -193,6 +203,16 @@ module.exports = grammar({
           "then",
           repeat(field("pre_consequence", $.statement)),
           optional(field("consequence", $.expression)),
+          optional(
+            seq(
+              "else",
+              "if",
+              field("condition", $.expression),
+              "then",
+              repeat(field("pre_consequence", $.statement)),
+              optional(field("consequence", $.expression)),
+            ),
+          ),
           choice(
             "end",
             seq(
@@ -215,7 +235,10 @@ module.exports = grammar({
         field("name", $.identifier),
         optional(field("generics", $.generic_parameters)),
         choice(
-          seq(repeat($.struct_field), "end"),
+          seq(
+            repeat(choice($.struct_field, $.impl_function, $.impl_proc)),
+            "end",
+          ),
           seq("(", repeat($.struct_field), ")"),
         ),
       ),
@@ -373,6 +396,18 @@ module.exports = grammar({
         $.do_block,
 
         $.plex_record_expression,
+
+        $.range_expression,
+      ),
+
+    range_expression: ($) =>
+      prec.right(
+        PREC.RANGE,
+        seq(
+          optional($.expression),
+          choice("..", "..="),
+          optional($.expression),
+        ),
       ),
 
     // Primary expressions that can be used as base for postfix operations
@@ -381,9 +416,30 @@ module.exports = grammar({
 
     // Postfix expressions include function calls and member access
     postfix_expression: ($) =>
-      choice($.function_call, $.member_access, $.primary_expression),
+      choice(
+        $.function_call,
+        $.macro_call,
+        $.member_access,
+        $.primary_expression,
+      ),
 
     parenthesized_expression: ($) => seq("(", $.expression, ")"),
+
+    macro_call: ($) =>
+      prec.dynamic(
+        2,
+        prec.right(
+          PREC.CALL + 2,
+          seq(
+            field("macro", seq($.postfix_expression)),
+            field("tilde", "~"),
+            choice(
+              field("arguments", $.arguments),
+              field("argument", $.expression),
+            ),
+          ),
+        ),
+      ),
 
     function_call: ($) =>
       prec.dynamic(
@@ -418,7 +474,11 @@ module.exports = grammar({
         1000,
         choice(
           // Single parameter lambda: x => expr
-          seq(field("params", $.identifier), "=>", field("body", $.expression)),
+          seq(
+            field("params", choice($.identifier, seq("(", $.identifier, ")"))),
+            "=>",
+            field("body", $.expression),
+          ),
           // Empty parameter lambda: () => expr
           seq(
             field("params", seq("(", ")")),
@@ -427,7 +487,11 @@ module.exports = grammar({
           ),
           // Multi-parameter lambda: (x, y, z) => expr
           seq(
-            field("params", $.tuple_literal),
+            optional(field("generic_parameters", $.generic_parameters)),
+            "(",
+            field("params", optionalCommaSep($.fn_lambda_param)),
+            ")",
+            optional(seq("->", field("return_type", $.type))),
             "=>",
             field("body", $.expression),
           ),
@@ -437,6 +501,7 @@ module.exports = grammar({
     fn_lambda: ($) =>
       seq(
         "fn",
+        optional(field("generic_parameters", $.generic_parameters)),
         "(",
         field("params", optionalCommaSep($.fn_lambda_param)),
         ")",
@@ -513,14 +578,22 @@ module.exports = grammar({
       seq("match", field("value", $.expression), repeat1($.match_arm), "end"),
 
     match_arm: ($) =>
-      seq(field("pattern", $.pattern), "=>", field("body", $.expression), ","),
+      seq(
+        field("pattern", $.pattern),
+        "=>",
+        field("body", $.expression),
+        optional(","),
+      ),
 
     pattern: ($) =>
-      choice(
-        $.wildcard_pattern,
-        $.constructor_pattern,
-        $.literal_pattern,
-        $.identifier_pattern,
+      seq(
+        choice(
+          $.wildcard_pattern,
+          $.identifier_pattern,
+          $.constructor_pattern,
+          $.literal_pattern,
+        ),
+        optional(seq("where", $.expression)),
       ),
 
     plex_record_expression: ($) =>
@@ -542,9 +615,9 @@ module.exports = grammar({
       choice(
         prec.left(
           seq(
-            field("constructor", $.qualified_identifier),
+            field("constructor", choice($.identifier, $.qualified_identifier)),
             "(",
-            field("args", commaSep($.pattern)),
+            field("args", optional(commaSep($.pattern))),
             ")",
           ),
         ),
@@ -562,6 +635,7 @@ module.exports = grammar({
       seq(
         "impl",
         optional(field("generics", $.generic_parameters)),
+        optional(seq($.type, "<-")),
         field("type", $.type),
         repeat(choice($.impl_function, $.impl_proc)),
         "end",
