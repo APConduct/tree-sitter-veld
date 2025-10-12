@@ -83,7 +83,11 @@
 ; Lambda parameters - direct identifiers in tuple literals
 (lambda
   params: (fn_lambda_param
-    (identifier) @variable))
+    (identifier) @property))
+
+(lambda
+  params: (fn_lambda_param
+    name: (identifier) @variable))
 
 ; Lambda parameters - wrapped identifiers in tuple literals
 ; (lambda
@@ -93,15 +97,18 @@
 ;         (primary_expression
 ;           (identifier) @variable)))))
 
+(fn_lambda_param
+  name: (identifier) @property)
+
 ; Lambda parameters - single identifier
 (lambda
-  params: (identifier) @variable)
+  params: (identifier) @property)
 
 (fn_lambda_param
-  name: (identifier) @variable)
+  name: (identifier) @property)
 
 (fn_lambda_param
-  (identifier) @variable)
+  (identifier) @property)
 
 ; Function calls - capture the function name identifier
 (function_call
@@ -198,7 +205,7 @@
 (member_access
   object: (postfix_expression
     (primary_expression
-      (identifier) @variable)))
+      (identifier) @property)))
 
 ; ; Member access in nested chains (object side)
 (member_access

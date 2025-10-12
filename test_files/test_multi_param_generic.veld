@@ -5,6 +5,9 @@ let choose_first = fn<T, U>(first: T, second: U) -> T => first
 
 let choose_second = <T, U>(first: T, second: U) -> U => second
 
+let choose_second_again = (first, second) => second
+
+
 let choice1 = choose_first(100, "world")
 
 choice1
