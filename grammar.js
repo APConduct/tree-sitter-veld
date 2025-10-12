@@ -43,6 +43,9 @@ module.exports = grammar({
     [$.expression_statement, $.block],
     [$.tuple_literal, $.primary_expression],
     [$.tuple_literal, $.arguments],
+    [$.basic_type, $.generic_type],
+    [$.primary_expression, $.fn_lambda_param],
+    [$.lambda],
   ],
 
   rules: {
@@ -109,7 +112,7 @@ module.exports = grammar({
         choice("let", seq("let", "mut"), "var", "const"),
         field("name", $.identifier),
         optional(seq(":", field("type", $.type))),
-        optional(seq("=", field("value", $.expression))),
+        optional(seq(field("equal_sign", "="), field("value", $.expression))),
       ),
 
     variable_assignment: ($) =>
@@ -456,7 +459,11 @@ module.exports = grammar({
         1000,
         choice(
           // Single parameter lambda: x => expr
-          seq(field("params", $.identifier), "=>", field("body", $.expression)),
+          seq(
+            field("params", choice($.identifier, seq("(", $.identifier, ")"))),
+            "=>",
+            field("body", $.expression),
+          ),
           // Empty parameter lambda: () => expr
           seq(
             field("params", seq("(", ")")),
@@ -465,7 +472,11 @@ module.exports = grammar({
           ),
           // Multi-parameter lambda: (x, y, z) => expr
           seq(
-            field("params", $.tuple_literal),
+            optional(field("generic_parameters", $.generic_parameters)),
+            "(",
+            field("params", optionalCommaSep($.fn_lambda_param)),
+            ")",
+            optional(seq("->", field("return_type", $.type))),
             "=>",
             field("body", $.expression),
           ),
@@ -475,6 +486,7 @@ module.exports = grammar({
     fn_lambda: ($) =>
       seq(
         "fn",
+        optional(field("generic_parameters", $.generic_parameters)),
         "(",
         field("params", optionalCommaSep($.fn_lambda_param)),
         ")",
