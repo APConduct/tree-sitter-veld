@@ -42,6 +42,7 @@ module.exports = grammar({
     [$.if_statement, $.if_expression],
     [$.expression_statement, $.block],
     [$.tuple_literal, $.primary_expression],
+    [$.tuple_literal, $.arguments],
   ],
 
   rules: {
@@ -397,9 +398,30 @@ module.exports = grammar({
 
     // Postfix expressions include function calls and member access
     postfix_expression: ($) =>
-      choice($.function_call, $.member_access, $.primary_expression),
+      choice(
+        $.function_call,
+        $.macro_call,
+        $.member_access,
+        $.primary_expression,
+      ),
 
     parenthesized_expression: ($) => seq("(", $.expression, ")"),
+
+    macro_call: ($) =>
+      prec.dynamic(
+        2,
+        prec.right(
+          PREC.CALL + 2,
+          seq(
+            field("macro", seq($.postfix_expression)),
+            field("tilde", "~"),
+            choice(
+              field("arguments", $.arguments),
+              field("argument", $.expression),
+            ),
+          ),
+        ),
+      ),
 
     function_call: ($) =>
       prec.dynamic(

@@ -2385,6 +2385,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "macro_call"
+        },
+        {
+          "type": "SYMBOL",
           "name": "member_access"
         },
         {
@@ -2409,6 +2413,61 @@
           "value": ")"
         }
       ]
+    },
+    "macro_call": {
+      "type": "PREC_DYNAMIC",
+      "value": 2,
+      "content": {
+        "type": "PREC_RIGHT",
+        "value": 16,
+        "content": {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "macro",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "postfix_expression"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "tilde",
+              "content": {
+                "type": "STRING",
+                "value": "~"
+              }
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "arguments",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "arguments"
+                  }
+                },
+                {
+                  "type": "FIELD",
+                  "name": "argument",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "expression"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "function_call": {
       "type": "PREC_DYNAMIC",
@@ -3800,6 +3859,10 @@
     [
       "tuple_literal",
       "primary_expression"
+    ],
+    [
+      "tuple_literal",
+      "arguments"
     ]
   ],
   "precedences": [],

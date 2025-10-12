@@ -19,6 +19,15 @@
 (primary_expression
   (identifier) @variable)
 
+(if_statement
+      condition: (expression
+        (postfix_expression
+          (member_access
+            object: (postfix_expression
+              (primary_expression
+                (identifier)))
+            member: (identifier) @property))))
+
 ; Identifiers in specific contexts
 (function_declaration
   name: (identifier) @function)
@@ -97,6 +106,11 @@
 ; Function calls - capture the function name identifier
 (function_call
   function: (postfix_expression
+    (primary_expression
+      (identifier) @function.call)))
+
+(macro_call
+  macro: (postfix_expression
     (primary_expression
       (identifier) @function.call)))
 
@@ -253,10 +267,14 @@
 "as" @keyword
 "mod" @keyword
 "plex" @keyword
+"const" @keyword
+"var" @keyword
+"mut" @keyword
+"impl" @keyword
 
 ; Pattern matching for problematic keywords in identifiers
 ((identifier) @keyword
- (#match? @keyword "^(break|continue|macro|while|for|in|match|where)$"))
+ (#match? @keyword "^(break|continue|macro|while|for|in|match|where|impl)$"))
 
 ; identifier is type if it starts with a capital letter
 ((identifier) @type
