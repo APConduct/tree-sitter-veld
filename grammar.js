@@ -39,13 +39,13 @@ module.exports = grammar({
   conflicts: ($) => [
     // Keep conflicts minimal and only add when necessary
     [$.expression_statement, $.do_block],
-    [$.if_statement, $.if_expression],
     [$.expression_statement, $.block],
     [$.tuple_literal, $.primary_expression],
     [$.tuple_literal, $.arguments],
     [$.basic_type, $.generic_type],
     [$.primary_expression, $.fn_lambda_param],
     [$.lambda],
+    [$.primary_expression, $.lambda],
   ],
 
   rules: {
@@ -201,6 +201,15 @@ module.exports = grammar({
           "then",
           repeat(field("pre_consequence", $.statement)),
           optional(field("consequence", $.expression)),
+          optional(
+            seq(
+              "else if",
+              field("condition", $.expression),
+              "then",
+              repeat(field("pre_consequence", $.statement)),
+              optional(field("consequence", $.expression)),
+            ),
+          ),
           choice(
             "end",
             seq(
@@ -223,7 +232,10 @@ module.exports = grammar({
         field("name", $.identifier),
         optional(field("generics", $.generic_parameters)),
         choice(
-          seq(repeat($.struct_field), "end"),
+          seq(
+            repeat(choice($.struct_field, $.impl_function, $.impl_proc)),
+            "end",
+          ),
           seq("(", repeat($.struct_field), ")"),
         ),
       ),
@@ -563,14 +575,22 @@ module.exports = grammar({
       seq("match", field("value", $.expression), repeat1($.match_arm), "end"),
 
     match_arm: ($) =>
-      seq(field("pattern", $.pattern), "=>", field("body", $.expression), ","),
+      seq(
+        field("pattern", $.pattern),
+        "=>",
+        field("body", $.expression),
+        optional(","),
+      ),
 
     pattern: ($) =>
-      choice(
-        $.wildcard_pattern,
-        $.constructor_pattern,
-        $.literal_pattern,
-        $.identifier_pattern,
+      seq(
+        choice(
+          $.wildcard_pattern,
+          $.identifier_pattern,
+          $.constructor_pattern,
+          $.literal_pattern,
+        ),
+        optional(seq("where", $.expression)),
       ),
 
     plex_record_expression: ($) =>
@@ -592,9 +612,9 @@ module.exports = grammar({
       choice(
         prec.left(
           seq(
-            field("constructor", $.qualified_identifier),
+            field("constructor", choice($.identifier, $.qualified_identifier)),
             "(",
-            field("args", commaSep($.pattern)),
+            field("args", optional(commaSep($.pattern))),
             ")",
           ),
         ),
@@ -612,6 +632,7 @@ module.exports = grammar({
       seq(
         "impl",
         optional(field("generics", $.generic_parameters)),
+        optional(seq($.type, "<-")),
         field("type", $.type),
         repeat(choice($.impl_function, $.impl_proc)),
         "end",

@@ -157,6 +157,10 @@
         "required": true,
         "types": [
           {
+            "type": "identifier",
+            "named": true
+          },
+          {
             "type": "qualified_identifier",
             "named": true
           }
@@ -721,7 +725,7 @@
         ]
       },
       "condition": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -731,7 +735,7 @@
         ]
       },
       "consequence": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -787,6 +791,10 @@
         },
         {
           "type": "impl_proc",
+          "named": true
+        },
+        {
+          "type": "type",
           "named": true
         }
       ]
@@ -1419,11 +1427,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "constructor_pattern",
+          "named": true
+        },
+        {
+          "type": "expression",
           "named": true
         },
         {
@@ -1900,6 +1912,14 @@
       "required": false,
       "types": [
         {
+          "type": "impl_function",
+          "named": true
+        },
+        {
+          "type": "impl_proc",
+          "named": true
+        },
+        {
           "type": "struct_field",
           "named": true
         }
@@ -2248,6 +2268,10 @@
     "named": false
   },
   {
+    "type": "<-",
+    "named": false
+  },
+  {
     "type": "<=",
     "named": false
   },
@@ -2310,6 +2334,10 @@
   },
   {
     "type": "else",
+    "named": false
+  },
+  {
+    "type": "else if",
     "named": false
   },
   {
@@ -2426,6 +2454,10 @@
   },
   {
     "type": "var",
+    "named": false
+  },
+  {
+    "type": "where",
     "named": false
   },
   {
