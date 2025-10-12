@@ -1101,7 +1101,11 @@
                 "members": [
                   {
                     "type": "STRING",
-                    "value": "else if"
+                    "value": "else"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "if"
                   },
                   {
                     "type": "FIELD",
@@ -4135,6 +4139,13 @@
     [
       "primary_expression",
       "lambda"
+    ],
+    [
+      "if_statement"
+    ],
+    [
+      "if_statement",
+      "if_expression"
     ]
   ],
   "precedences": [],

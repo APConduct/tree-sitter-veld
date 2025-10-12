@@ -46,6 +46,8 @@ module.exports = grammar({
     [$.primary_expression, $.fn_lambda_param],
     [$.lambda],
     [$.primary_expression, $.lambda],
+    [$.if_statement],
+    [$.if_statement, $.if_expression],
   ],
 
   rules: {
@@ -203,7 +205,8 @@ module.exports = grammar({
           optional(field("consequence", $.expression)),
           optional(
             seq(
-              "else if",
+              "else",
+              "if",
               field("condition", $.expression),
               "then",
               repeat(field("pre_consequence", $.statement)),

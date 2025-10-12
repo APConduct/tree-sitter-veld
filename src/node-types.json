@@ -2337,10 +2337,6 @@
     "named": false
   },
   {
-    "type": "else if",
-    "named": false
-  },
-  {
     "type": "end",
     "named": false
   },
