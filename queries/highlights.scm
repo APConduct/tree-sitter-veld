@@ -82,16 +82,16 @@
 
 ; Lambda parameters - direct identifiers in tuple literals
 (lambda
-  params: (tuple_literal
+  params: (fn_lambda_param
     (identifier) @variable))
 
 ; Lambda parameters - wrapped identifiers in tuple literals
-(lambda
-  params: (tuple_literal
-    (expression
-      (postfix_expression
-        (primary_expression
-          (identifier) @variable)))))
+; (lambda
+;   params: (fn_lambda_param
+;     (expression
+;       (postfix_expression
+;         (primary_expression
+;           (identifier) @variable)))))
 
 ; Lambda parameters - single identifier
 (lambda
