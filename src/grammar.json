@@ -235,6 +235,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "type_alias_declaration"
+        },
+        {
+          "type": "SYMBOL",
           "name": "if_statement"
         },
         {
@@ -869,6 +873,56 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "type_alias_declaration": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "visibility",
+              "content": {
+                "type": "STRING",
+                "value": "pub"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "type"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "type"
+            }
+          ]
         }
       ]
     },
@@ -4279,6 +4333,48 @@
     ],
     [
       "union_declaration",
+      "generic_type"
+    ],
+    [
+      "union_declaration",
+      "plex_declaration",
+      "basic_type"
+    ],
+    [
+      "union_declaration",
+      "plex_declaration",
+      "generic_type"
+    ],
+    [
+      "union_declaration",
+      "plex_declaration",
+      "generic_type",
+      "basic_type"
+    ],
+    [
+      "plex_declaration",
+      "type"
+    ],
+    [
+      "union_declaration",
+      "basic_type"
+    ],
+    [
+      "union_declaration",
+      "basic_type",
+      "generic_type"
+    ],
+    [
+      "union_declaration",
+      "plex_declaration",
+      "type_alias_declaration",
+      "basic_type"
+    ],
+    [
+      "union_declaration",
+      "plex_declaration",
+      "type_alias_declaration",
+      "basic_type",
       "generic_type"
     ]
   ],

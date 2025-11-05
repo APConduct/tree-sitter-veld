@@ -1867,6 +1867,10 @@
           "named": true
         },
         {
+          "type": "type_alias_declaration",
+          "named": true
+        },
+        {
           "type": "union_declaration",
           "named": true
         },
@@ -2069,6 +2073,46 @@
         },
         {
           "type": "unit_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_alias_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "visibility": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "pub",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type",
           "named": true
         }
       ]
