@@ -48,6 +48,10 @@ module.exports = grammar({
     [$.primary_expression, $.lambda],
     [$.if_statement],
     [$.if_statement, $.if_expression],
+    [$.union_declaration, $.plex_declaration, $.generic_type],
+    [$.plex_declaration, $.union_declaration],
+    [$.union_declaration, $.generic_type],
+
   ],
 
   rules: {
@@ -89,6 +93,7 @@ module.exports = grammar({
         $.kind_declaration,
         $.impl_declaration,
         $.plex_declaration,
+        $.union_declaration,
         $.if_statement,
         $.return_statement,
         $.expression_statement,
@@ -147,7 +152,7 @@ module.exports = grammar({
     plex_declaration: ($) =>
       seq(
         optional(field("visibility", "pub")),
-        "plex",
+        choice("plex", "type"),
         field("name", $.identifier),
         optional(field("generics", $.generic_parameters)),
         "=",
@@ -155,6 +160,18 @@ module.exports = grammar({
       ),
 
     plex_type: ($) => seq("{", $.plex_type_field_list, "}"),
+
+    union_declaration: ($) =>
+      seq(
+        optional(field("visibility", "pub")),
+        choice("type", "union",),
+        field("name", $.identifier),
+        optional(field("generics", $.generic_parameters)),
+        "=",
+        choice($.identifier, $.union_type),
+      ),
+
+    union_type: ($) => seq($.type, "|", $.type, repeat(seq("|", $.type))),
 
     plex_type_field_list: ($) =>
       seq(

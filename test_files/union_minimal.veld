@@ -1,0 +1,2 @@
+type IntOrString = i32 | str
+type NumberOrBool = i32 | f64 | bool

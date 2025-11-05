@@ -1867,6 +1867,10 @@
           "named": true
         },
         {
+          "type": "union_declaration",
+          "named": true
+        },
+        {
           "type": "variable_assignment",
           "named": true
         },
@@ -2117,6 +2121,71 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "union_declaration",
+    "named": true,
+    "fields": {
+      "generics": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "generic_parameters",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "visibility": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "pub",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "union_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "union_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2445,6 +2514,14 @@
     "named": false
   },
   {
+    "type": "type",
+    "named": false
+  },
+  {
+    "type": "union",
+    "named": false
+  },
+  {
     "type": "unit_type",
     "named": true
   },
@@ -2462,6 +2539,10 @@
   },
   {
     "type": "{",
+    "named": false
+  },
+  {
+    "type": "|",
     "named": false
   },
   {
